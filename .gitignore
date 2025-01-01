@@ -1,0 +1,41 @@
+# Frontend 관련
+front-end/node_modules/
+front-end/.env
+front-end/build/
+front-end/debug.log
+front-end/coverage/
+front-end/.eslintcache
+
+# 공통
+*.log
+*.pyc
+*.pyo
+*.env
+.vscode/
+.idea/
+
+# 환경 변수 파일
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# dependencies
+node_modules/
+/.pnp
+.pnp.js
+
+# testing
+coverage/
+
+# production
+build/
+
+# misc
+.DS_Store
+
+# 로그 파일
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
