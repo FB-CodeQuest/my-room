@@ -23,5 +23,3 @@
         value:
           "시작일 :"
           "예상 작업 시간 :"
-        validations:
-            required: true
