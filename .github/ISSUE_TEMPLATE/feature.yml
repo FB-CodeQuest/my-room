@@ -1,0 +1,27 @@
+  name: "✨Feature"
+  description: "새로운 기능 추가"
+  labels: ["Feat"]
+  body:
+    - type : textarea
+      attributes:
+        label: "📄기능 설명"
+        description: "구현하려는 기능에 대한 설명을 작성해주세요"
+        placeholder: "가독성 좋게 작성 부탁드려요"
+      validations:
+        required: true
+    - type: textarea
+      attributes:
+        label: "📝작업할 내용"
+        description: "해당 기능 구현을 위해 할 일을 작성해주세요"
+        placeholder: "최대한 세분화해서 적어주세요"
+      validations:
+        required: true
+    - type: textarea
+      attributes:
+        label: "⏲️작업 시간"
+        description: "예상 작업 시간을 작성해주세요"
+        value:
+          "시작일 :"
+          "예상 작업 시간 :"
+        validations:
+            required: true
