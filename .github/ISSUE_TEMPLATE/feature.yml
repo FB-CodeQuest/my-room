@@ -20,6 +20,6 @@
       attributes:
         label: "⏲️작업 시간"
         description: "예상 작업 시간을 작성해주세요"
-        value: "시작일 : \n 예상 작업 시간 :"
+        value: "시작일 :\n 예상 작업 시간 :"
       validations:
         required: true
