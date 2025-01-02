@@ -22,6 +22,7 @@
         description: "예상 작업 시간을 작성해주세요"
         value: |
           시작일 :
+          
           예상 작업 시간 :
       validations:
         required: true
