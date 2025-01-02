@@ -15,11 +15,13 @@
         description: "해당 기능 구현을 위해 할 일을 작성해주세요"
         placeholder: "최대한 세분화해서 적어주세요"
       validations:
-        required: true
+          required: true
     - type: textarea
       attributes:
         label: "⏲️작업 시간"
         description: "예상 작업 시간을 작성해주세요"
         value:
-          "시작일 :"
-          "예상 작업 시간 :"
+          "시작일 :
+          예상 작업 시간 :"
+      validations:
+        required: true
