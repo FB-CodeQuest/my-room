@@ -1,9 +1,10 @@
-const Input = ({label, type, value, onChange, placeholder}) =>{
+const Input = ({label, type, id, value, onChange, placeholder}) => {
     return(
-        <div className={"form-group"}>
-            <label>{label}</label>
+        <div className={"input-field"}>
+            <label htmlFor={id}>{label}</label>
             <input
                 type={type}
+                id={id}
                 value={value}
                 onChange={onChange}
                 placeholder={placeholder}
