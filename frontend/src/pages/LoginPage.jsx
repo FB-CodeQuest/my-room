@@ -4,35 +4,46 @@ import Button from "../components/Button";
 import CheckBox from "../components/CheckBox";
 
 import {useState} from "react";
-import {Link} from "react-router-dom";
+import LinkButton from "../components/LinkButton";
 const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     return (
         <div className={"login"}>
             <h2>Login</h2>
-            <Form>
-                <Input
-                    type={"email"}
-                    id={"email"}
-                    label={"이메일"}
-                    placeholder={"이메일 주소를 입력해주세요"}
-                    onChange={(e) => setEmail(e.target.value)}
-                />
-                <Input
-                    type={"password"}
-                    id={"password"}
-                    label={"비밀번호"}
-                    placeholder={"비밀번호를 입력해주세요"}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
-                <CheckBox id={"remember"}
-                          label={"로그인 유지하기"}
-                          checked={false}
-                          />
-                <Button type={"submit"}>로그인</Button>
-            </Form>
-            <Link to="/passwordReset">비밀번호 재설정</Link>
+            <div className={"login-container"}>
+                <Form>
+                    <Input
+                        type={"email"}
+                        id={"email"}
+                        label={"이메일"}
+                        placeholder={"이메일 주소를 입력해주세요"}
+                        onChange={(e) => setEmail(e.target.value)}
+                    />
+                    <Input
+                        type={"password"}
+                        id={"password"}
+                        label={"비밀번호"}
+                        placeholder={"비밀번호를 입력해주세요"}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <CheckBox id={"remember"}
+                              label={"로그인 유지하기"}
+                              checked={false}
+                              />
+                    <Button type={"submit"}>로그인</Button>
+                </Form>
+                <LinkButton to={"#"} className={"password-reset"}>비밀번호 재설정</LinkButton>
+                <div className={"SNS-login"}>
+                    <LinkButton to={"#"} className={"kakao"}><span>Kakao</span></LinkButton>
+                    <LinkButton to={"#"} className={"google"}><span>Google</span></LinkButton>
+                    <LinkButton to={"#"} className={"naver"}><span>Naver</span></LinkButton>
+                </div>
+            </div>
+
+            <div className={"order-container"}>
+                <LinkButton to={"#"} className={"join"}>회원가입</LinkButton>
+            </div>
         </div>
     );
 };
