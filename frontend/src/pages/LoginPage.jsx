@@ -5,9 +5,12 @@ import CheckBox from "../components/CheckBox";
 
 import {useState} from "react";
 import LinkButton from "../components/LinkButton";
+import ToggleButton from "../components/ToggleButton";
 const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [order, setOrder] = useState('');
+    const [orderNumber, setOrderNumber] = useState('');
     return (
         <div className={"login"}>
             <h2>Login</h2>
@@ -43,6 +46,22 @@ const LoginPage = () => {
 
             <div className={"order-container"}>
                 <LinkButton to={"#"} className={"join"}>회원가입</LinkButton>
+                <ToggleButton label={"비회원 주문 조회하기"}>
+                    <Form>
+                        <Input
+                            type={"text"}
+                            id={"order"}
+                            placeholder={"주문자명"}
+                            onChange={(e) => setOrder(e.target.value)}
+                        />
+                        <Input
+                            type={"text"}
+                            id={"order"}
+                            placeholder={"주문번호"}
+                            onChange={(e) => setOrderNumber(e.target.value)}
+                        />
+                    </Form>
+                </ToggleButton>
             </div>
         </div>
     );
