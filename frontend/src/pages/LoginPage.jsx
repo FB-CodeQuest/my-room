@@ -32,7 +32,7 @@ const LoginPage = () => {
                           />
                 <Button type={"submit"}>로그인</Button>
             </Form>
-            {/*<Link to="/passwordReset">비밀번호 재설정</Link>*/}
+            <Link to="/passwordReset">비밀번호 재설정</Link>
         </div>
     );
 };
