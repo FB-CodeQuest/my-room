@@ -1,4 +1,4 @@
-package com.fbcq.backend;
+package com.fbcq.be;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
