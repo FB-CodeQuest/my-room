@@ -1,4 +1,5 @@
-import LoginPage from "./pages/LoginPage";
+import "./styles/global.scss";
+import LoginPage from "./pages/Login/LoginPage";
 
 function App() {
   return (

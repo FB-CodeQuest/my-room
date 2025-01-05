@@ -1,4 +1,4 @@
-const DropDown = ({id, label,options, value, onChange}) => {
+const DropDown = ({id, label, options, value, onChange}) => {
     return(
         <div className={"dropdown-group"}>
             {label && (

@@ -1,0 +1,24 @@
+@import "../../styles/global.scss";
+.input-field{
+    display: flex;
+    align-items: center;
+    width: 100%;
+
+  label{
+    flex-basis: 80px;
+    flex-shrink: 0;
+    width: 100%;
+    font-size: $font-size-body;
+  }
+
+  input{
+    width: 100%;
+    padding: .8rem 0.5rem;
+    border: 1px solid #ccc;
+    font-size: $font-size-small;
+
+    &:focus{
+      outline: none;
+    }
+  }
+}

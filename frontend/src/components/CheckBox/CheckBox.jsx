@@ -1,3 +1,4 @@
+import "./CheckBox.scss";
 const CheckBox = ({id, label, checked, onChange}) => {
     return (
         <div className={"checkbox-group"}>

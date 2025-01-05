@@ -1,7 +1,8 @@
-const Input = ({label, type, id, value, onChange, placeholder}) => {
+import "./Input.scss";
+const Input = ({label, type, id, value, onChange, placeholder, showLabel=false}) => {
     return(
         <div className={"input-field"}>
-            <label htmlFor={id}>{label}</label>
+            {showLabel && <label htmlFor={id}>{label}</label>}
             <input
                 type={type}
                 id={id}
