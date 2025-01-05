@@ -1,0 +1,10 @@
+@import "../../styles/global.scss";
+
+button{
+    width: 100%;
+    padding: .5rem 1rem;
+    color: #fff;
+    font-size: $font-size-h4;
+    border-radius: 4px;
+    cursor: pointer;
+}

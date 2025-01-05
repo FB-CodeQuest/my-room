@@ -1,0 +1,16 @@
+@import "../../styles/global.scss";
+
+.toggle-button-container{
+  width: 100%;
+
+  .toggle-btn{
+    background-color: transparent;
+    font-size: $font-size-body;
+    color: #333;
+  }
+  .toggle-content{
+    overflow: hidden;
+    margin-top: 1rem;
+    transition: all 0.3s ease;
+  }
+}

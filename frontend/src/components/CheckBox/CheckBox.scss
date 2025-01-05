@@ -1,0 +1,17 @@
+@import "../../styles/global.scss";
+
+.checkbox-group{
+  display: flex;
+  align-items: center;
+
+  .checkbox-label{
+    display: flex;
+    align-items: baseline;
+    font-size: $font-size-small;
+    cursor: pointer;
+
+    input{
+      margin-right: 4px;
+    }
+  }
+}
