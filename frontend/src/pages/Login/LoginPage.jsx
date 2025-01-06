@@ -44,7 +44,7 @@ const LoginPage = () => {
                               checked={isChecked}
                               onChange={handleChange}
                               />
-                    <Button type={"submit"} className={"login-btn"}>로그인</Button>
+                    <Button type={"submit"}>로그인</Button>
                 </Form>
                 <LinkButton to={"#"} className={"password-reset"}>비밀번호 재설정</LinkButton>
                 <div className={"sns-login"}>

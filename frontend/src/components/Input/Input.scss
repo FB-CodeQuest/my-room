@@ -5,7 +5,7 @@
     width: 100%;
 
   label{
-    flex-basis: 80px;
+    flex-basis: 130px;
     flex-shrink: 0;
     width: 100%;
     font-size: $font-size-body;
@@ -19,6 +19,14 @@
 
     &:focus{
       outline: none;
+    }
+  }
+  &.column{
+    flex-direction: column;
+
+    label{
+      flex-basis: initial;
+      margin-bottom: 8px;
     }
   }
 }

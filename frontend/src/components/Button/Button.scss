@@ -3,8 +3,15 @@
 button{
     width: 100%;
     padding: .5rem 1rem;
+    margin-top: 1rem;
     color: #fff;
     font-size: $font-size-h4;
     border-radius: 4px;
+    background-color: #333;
     cursor: pointer;
+
+    &.disable-btn{
+        background-color: #ccc;
+        cursor: not-allowed;
+    }
 }

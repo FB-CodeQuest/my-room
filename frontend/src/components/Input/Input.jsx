@@ -1,7 +1,7 @@
 import "./Input.scss";
-const Input = ({label, type, id, value, onChange, placeholder, showLabel=false}) => {
+const Input = ({label, type, id, value, onChange, placeholder, className, maxLength, showLabel=false}) => {
     return(
-        <div className={"input-field"}>
+        <div className={`input-field ${className}`}>
             {showLabel && <label htmlFor={id}>{label}</label>}
             <input
                 type={type}
@@ -9,6 +9,7 @@ const Input = ({label, type, id, value, onChange, placeholder, showLabel=false})
                 value={value}
                 onChange={onChange}
                 placeholder={placeholder}
+                maxLength={maxLength}
             />
         </div>
     );
