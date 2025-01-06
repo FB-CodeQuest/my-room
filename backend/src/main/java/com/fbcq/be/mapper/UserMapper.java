@@ -9,4 +9,5 @@ import org.apache.ibatis.annotations.Mapper;
 public interface UserMapper {
     LoginResponse select(LoginRequest loginRequest);
     int create(SignUpRequest signUpRequest);
+    boolean updatePasswordByEmail(String email, String password);
 }

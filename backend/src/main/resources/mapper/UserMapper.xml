@@ -15,4 +15,11 @@
         INSERT INTO Users (user_id, email, password, name, phone, birth_date, gender)
         VALUES (#{userId}, #{email}, #{password}, #{name}, #{phone}, #{birthDate}, #{gender});
     </insert>
+
+    <!-- 비밀번호 재설정 -->
+    <update id="updatePasswordByEmail" parameterType="map">
+        UPDATE USERS
+        set password = #{password}
+        WHERE email = #{email}
+    </update>
 </mapper>

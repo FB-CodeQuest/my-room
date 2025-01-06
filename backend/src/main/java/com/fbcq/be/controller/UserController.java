@@ -47,4 +47,16 @@ public class UserController {
         log.info("SignUp successful for email: {}", signUpRequest.email());
         return ResponseEntity.ok("회원가입 성공");
     }
+
+    @PutMapping("/reset-password")
+    @Operation(summary = "사용자 비밀번호 재설정", description = "비밀번호를 재설정 합니다.")
+    public ResponseEntity<String> resetPassword(@RequestParam String email, @RequestParam String password) {
+        log.info("Renewal password request received: {}", password);
+        boolean isUpdated = userService.updatePasswordByEmail(email, password);
+        if (!isUpdated) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("비밀번호 재설정 실패");
+        }
+
+        return ResponseEntity.ok("비밀번호 재설정 성공");
+    }
 }
