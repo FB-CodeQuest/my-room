@@ -21,4 +21,11 @@ public class UserServiceImpl implements UserService {
     public int signUp(SignUpRequest signUpRequest) {
         return userDao.create(signUpRequest);
     }
+
+    @Override
+    public boolean updatePasswordByEmail(String email, String password) {
+//        String hashedPassword = passwordEncoder.encode(plainPassword);
+        return userDao.updatePasswordByEmail(email, password);
+    }
+
 }

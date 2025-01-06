@@ -9,4 +9,6 @@ public interface UserService {
     LoginResponse login(LoginRequest loginRequest);
 
     int signUp(SignUpRequest signUpRequest);
+
+    boolean updatePasswordByEmail(String email, String password);
 }
