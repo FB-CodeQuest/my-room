@@ -1,12 +1,12 @@
 import "./styles/global.scss";
 import LoginPage from "./pages/Login/LoginPage";
-import SignUp from "./pages/SignUp/SignUp";
+import SignUpPage from "./pages/SignUp/SignUpPage";
 
 function App() {
   return (
     <>
      {/*<LoginPage />*/}
-        <SignUp />
+        <SignUpPage />
     </>
   );
 }

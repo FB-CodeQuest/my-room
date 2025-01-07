@@ -1,0 +1,13 @@
+@import "../../styles/global.scss";
+
+.radio-group{
+  p{
+    margin-bottom: .5rem;
+    font-size: $font-size-body;
+  }
+  .radio-btn-wrap{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  };
+}
