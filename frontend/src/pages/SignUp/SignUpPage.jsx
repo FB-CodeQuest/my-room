@@ -140,7 +140,7 @@ const SignUpPage = () =>{
                         <Input
                             type={"password"}
                             className={"column"}
-                            id={"password"}
+                            id={"passwordCheck"}
                             label={"비밀번호 확인"}
                             showLabel={true}
                             placeholder={"비밀번호를 확인해주세요"}
