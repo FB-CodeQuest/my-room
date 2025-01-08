@@ -17,35 +17,70 @@ const LoginPage = () => {
     const [orderNumber, setOrderNumber] = useState('');
     const [isChecked, setIsChecked] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+
+    const [emailError, setEmailError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
     const handleLogin = async (e) => {
         e.preventDefault();
+        if (!handleValidation()) return;
         setIsLoading(true);
-        try{
-            const response = await axiosInstance.post("/users/login",{
-               email,
-               password
+        try {
+            // API요청
+            const response = await axiosInstance.post("/users/login", {
+                email,
+                password
             });
 
-            if(response.status === 200){
-                const {userId, name} = response.data;
+            // API응답 데이터 처리
+            if (response.status === 200) {
+                const {userId, name, token} = response.data;
                 alert(`환영합니다,${name}님!`);
                 window.location.href = "/";
             }
         } catch (error) {
-            if(error.response && error.response.status === 401) {
+            if (error.response && error.response.status === 401) {
                 alert("이메일 또는 비밀번호가 일지하지 않습니다");
             } else {
                 alert("로그인 요청 중 문제가 발생했습니다");
                 console.log("로그인 문제발생")
             }
 
-        }finally {
+        } finally {
             setIsLoading(false);
         }
     }
     const handleChange = (e) => {
         setIsChecked((prev) => !prev);
     };
+
+    // 유효성 검사 함수
+    const isValidEmail = (email) => {
+        const emailRegex = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-za-z0-9\-]+/
+        return emailRegex.test(email);
+    };
+    const isValidPassword = (password) => {
+        const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,12}$/;
+        return passwordRegex.test(password);
+    }
+
+    const handleValidation = () => {
+        let isValid = true;
+
+        if (!isValidEmail(email)) {
+            setEmailError("올바른 이메일 주소를 입력해주세요")
+            isValid = false;
+        } else {
+            setEmailError("");
+        }
+        if (!isValidPassword(password)) {
+            setPasswordError("올바른 비밀번호를 입력해주세요")
+            isValid = false;
+        } else {
+            setPasswordError("");
+        }
+        return isValid;
+    }
+
     return (
         <div className={"login"}>
             <h2>Login</h2>
@@ -58,23 +93,27 @@ const LoginPage = () => {
                             label={"이메일"}
                             placeholder={"이메일 주소를 입력해주세요"}
                             onChange={(e) => setEmail(e.target.value)}
+                            className={emailError ? "error" : ""}
                             required
                         />
+                        {emailError && <p className="error-message">{emailError}</p>}
                         <Input
                             type={"password"}
                             id={"password"}
                             label={"비밀번호"}
                             placeholder={"비밀번호를 입력해주세요"}
                             onChange={(e) => setPassword(e.target.value)}
+                            className={passwordError ? "error" : ""}
                             required
                         />
+                        {passwordError && <p className="error-message">{passwordError}</p>}
                     </div>
                     <CheckBox id={"remember"}
                               label={"로그인 유지하기"}
                               checked={isChecked}
                               onChange={handleChange}
                               />
-                    <Button type={"submit"}>
+                    <Button type={"submit"} className={"login-btn"}>
                         {isLoading ? "로그인 중..." : "로그인"}
                     </Button>
                 </Form>
@@ -102,6 +141,7 @@ const LoginPage = () => {
                             placeholder={"주문번호"}
                             onChange={(e) => setOrderNumber(e.target.value)}
                         />
+                        <Button type={"submit"} className={"order-btn"}>주문조회하기</Button>
                     </Form>
                 </ToggleButton>
             </div>
