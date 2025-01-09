@@ -8,7 +8,7 @@ function App() {
     <>
      {/*<LoginPage />*/}
         <SignUpPage />
-        <PasswordResetPage/>
+        {/*<PasswordResetPage/>*/}
     </>
   );
 }

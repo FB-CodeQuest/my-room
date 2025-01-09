@@ -350,89 +350,100 @@ const SignUpPage = () => {
             <div className={"signup-container"}>
                 <Form className={"signup-form"} onSubmit={handleSignup}>
                     <div className={"input-group"}>
-                        <div className={"email-wrap"}>
+                        <div className={"input-wrap"}>
+                            <div className={"email-wrap"}>
+                                <Input
+                                    type={"text"}
+                                    className={emailError ? "column error" : "column"}
+                                    id={"email"}
+                                    label={"이메일"}
+                                    showLabel={true}
+                                    placeholder={"이메일을 입력해주세요"}
+                                    onChange={handleEmailChange}
+                                />
+                                <span>@</span>
+                                {domain !== 'custom' ? (
+                                    <DropDown
+                                        className={emailError? "error" : ""}
+                                        id={"domain"}
+                                        options={addressOptions}
+                                        value={domain}
+                                        onChange={handleDomainChange}
+                                    />
+                                ) : (
+                                        <InputWithButton
+                                            ref={inputRef}
+                                            className={emailError ? "error" : ""}
+                                            type={"text"}
+                                            id={"customDomain"}
+                                            label={"직접입력"}
+                                            placeholder={"직접입력"}
+                                            value={customDomain}
+                                            children={<FontAwesomeIcon
+                                                icon={faXmark}
+                                                className="close-icon"
+                                                onClick={resetToDropdown}
+                                            />}
+                                            btnType={"button"}
+                                            onChange={handleCustomDomainChange}
+                                            onKeyDown={(e) => e.key === "Enter" && handleCustomDomainSubmit(e)}
+                                        />
+
+                               )}
+                            </div>
+                            {emailError && <p className="error-message">{emailError}</p>}
+                            <Button type={"submit"} className={"submit-btn"}>이메일 인증</Button>
+                        </div>
+                        <div className={"input-wrap"}>
+                            <Input
+                                type={"password"}
+                                className={passwordError ? "column error" : "column"}
+                                id={"password"}
+                                label={"비밀번호"}
+                                showLabel={true}
+                                placeholder={"비밀번호를 입력해주세요"}
+                                onChange={handlePasswordChange}
+                            />
+                            {passwordError && <p className="error-message">{passwordError}</p>}
+                        </div>
+                        <div className={"input-wrap"}>
+                            <Input
+                                type={"password"}
+                                className={passwordCheckError ? "column error" : "column"}
+                                id={"passwordCheck"}
+                                label={"비밀번호 확인"}
+                                showLabel={true}
+                                placeholder={"비밀번호를 확인해주세요"}
+                                onChange={handlePasswordCheckChange}
+                            />
+                            {passwordCheckError && <p className="error-message">{passwordCheckError}</p>}
+                        </div>
+                        <div className={"input-wrap"}>
                             <Input
                                 type={"text"}
-                                className={emailError ? "column error" : "column"}
-                                id={"email"}
-                                label={"이메일"}
+                                className={nameError ? "column error" : "column"}
+                                id={"name"}
+                                label={"이름"}
                                 showLabel={true}
-                                placeholder={"이메일을 입력해주세요"}
-                                onChange={handleEmailChange}
+                                placeholder={"이름을 입력해주세요"}
+                                onChange={handleNameChange}
                             />
-                            <span>@</span>
-                            {domain !== 'custom' ? (
-                                <DropDown
-                                    className={emailError? "error" : ""}
-                                    id={"domain"}
-                                    options={addressOptions}
-                                    value={domain}
-                                    onChange={handleDomainChange}
-                                />
-                            ) : (
-                                    <InputWithButton
-                                        ref={inputRef}
-                                        className={emailError ? "error" : ""}
-                                        type={"text"}
-                                        id={"customDomain"}
-                                        label={"직접입력"}
-                                        placeholder={"직접입력"}
-                                        value={customDomain}
-                                        children={<FontAwesomeIcon
-                                            icon={faXmark}
-                                            className="close-icon"
-                                            onClick={resetToDropdown}
-                                        />}
-                                        btnType={"button"}
-                                        onChange={handleCustomDomainChange}
-                                        onKeyDown={(e) => e.key === "Enter" && handleCustomDomainSubmit(e)}
-                                    />
-
-                           )}
+                            {nameError && <p className="error-message">{nameError}</p>}
                         </div>
-                        {emailError && <p className="error-message">{emailError}</p>}
-                        <Button type={"submit"} className={"submit-btn"}>이메일 인증</Button>
-                        <Input
-                            type={"password"}
-                            className={passwordError ? "column error" : "column"}
-                            id={"password"}
-                            label={"비밀번호"}
-                            showLabel={true}
-                            placeholder={"비밀번호를 입력해주세요"}
-                            onChange={handlePasswordChange}
-                        />
-                        {passwordError && <p className="error-message">{passwordError}</p>}
-                        <Input
-                            type={"password"}
-                            className={passwordCheckError ? "column error" : "column"}
-                            id={"passwordCheck"}
-                            label={"비밀번호 확인"}
-                            showLabel={true}
-                            placeholder={"비밀번호를 확인해주세요"}
-                            onChange={handlePasswordCheckChange}
-                        />
-                        {passwordCheckError && <p className="error-message">{passwordCheckError}</p>}
-                        <Input
-                            type={"text"}
-                            className={nameError ? "column error" : "column"}
-                            id={"name"}
-                            label={"이름"}
-                            showLabel={true}
-                            placeholder={"이름을 입력해주세요"}
-                            onChange={handleNameChange}
-                        />
-                        {nameError && <p className="error-message">{nameError}</p>}
-                        <Input
-                            type={"text"}
-                            className={phoneNumberError ? "column error" : "column"}
-                            id={"phoneNumber"}
-                            label={"전화번호"}
-                            showLabel={true}
-                            placeholder={"전화번호를 입력해주세요"}
-                            onChange={handlePhoneNumberChange}
-                        />
-                        {phoneNumberError && <p className="error-message">{phoneNumberError}</p>}
-                        <Input
+                        <div className={"input-wrap"}>
+                            <Input
+                                type={"text"}
+                                className={phoneNumberError ? "column error" : "column"}
+                                id={"phoneNumber"}
+                                label={"전화번호"}
+                                showLabel={true}
+                                placeholder={"전화번호를 입력해주세요"}
+                                onChange={handlePhoneNumberChange}
+                            />
+                            {phoneNumberError && <p className="error-message">{phoneNumberError}</p>}
+                        </div>
+                        <div className={"input-wrap"}>
+                            <Input
                             type={"text"}
                             className={birthDateError ? "column error" : "column"}
                             id={"birthDate"}
@@ -441,8 +452,9 @@ const SignUpPage = () => {
                             placeholder={"생년월일을 입력해주세요"}
                             maxLength={6}
                             onChange={handleBirthDateChange}
-                        />
-                        {birthDateError && <p className="error-message">{birthDateError}</p>}
+                            />
+                            {birthDateError && <p className="error-message">{birthDateError}</p>}
+                        </div>
                         <RadioButton
                             groupLabel={"성별"}
                             name={"gender"}
