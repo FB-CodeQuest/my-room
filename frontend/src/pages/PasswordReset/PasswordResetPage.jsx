@@ -1,6 +1,6 @@
 import "./PasswordResetPage.scss";
 
-import Input from "../../components/Input/Input";
+import Input, {InputWithButton} from "../../components/Input/Input";
 import Button from "../../components/Button/Button";
 import LinkButton from "../../components/LinkButton";
 import Form from "../../components/Form";
@@ -53,17 +53,15 @@ const PasswordResetPage = () => {
             {step === 1 &&(
                 <Form className={"password-reset-form password-reset-email"}>
                     <p className={"message"}>가입한 이메일 주소를 입력해주세요</p>
-                    <div className={"input-button-wrap"}>
-                        <Input
-                            className={"input-with-button"}
-                            type={"text"}
-                            id={"emailAddress"}
-                            label={"이메일주소"}
-                            placeholder={"이메일"}
-                            onChange={(e) => setEmailAddress(e.target.value)}
-                        />
-                        <Button type={"submit"} className={"input-btn"}>확인</Button>
-                    </div>
+                    <InputWithButton
+                        className={"input-with-button"}
+                        type={"email"}
+                        id={"emailAddress"}
+                        label={"이메일주소"}
+                        placeholder={"이메일"}
+                        onChange={(e) => setEmailAddress(e.target.value)}
+                        children={"확인"}
+                    />
                     <Button type={"submit"} className={"input-btn"} onClick={nextStep}>이메일로 인증코드 받기</Button>
                 </Form>
             )}
@@ -72,21 +70,16 @@ const PasswordResetPage = () => {
             {step === 2 &&(
                 <Form className={"password-reset-form password-reset-code"}>
                     <p className={"message"}>가입한 이메일 주소를 입력해주세요</p>
-                    <div className={"input-button-wrap"}>
-                        <Input
-                            className={"input-with-button"}
-                            type={"text"}
-                            id={"passwordResetCode"}
-                            label={"인증코드 6자리"}
-                            placeholder={"인증코드 6자리"}
-                            maxLength={6}
-                            onChange={(e) => setEmailAddress(e.target.value)}
-                        />
-                        {isTimerActive && (
-                            <p className={"timer"}>{formatTime(time)}</p>
-                        )}
-                        <Button type={"submit"} className={"input-btn"} onClick={handleConfirmClick}>확인</Button>
-                    </div>
+                    <InputWithButton
+                        className={"input-with-button"}
+                        type={"text"}
+                        id={"passwordResetCode"}
+                        label={"인증코드 6자리"}
+                        placeholder={"인증코드 6자리"}
+                        maxLength={6}
+                        onChange={(e) => setEmailAddress(e.target.value)}
+                        children={"확인"}
+                    />
                     <div className={"message-wrap"}>
                         <p className={"message"}>이메일 받지 못하셨나요?</p>
                         <LinkButton to={"#"} className={"link-btn"}>이메일 재전송하기</LinkButton>

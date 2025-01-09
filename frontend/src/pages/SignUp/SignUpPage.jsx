@@ -362,7 +362,7 @@ const SignUpPage = () => {
     //         }
     //     };
 
-    // const handleDomainChange = (selectedValue) => {
+    // const handleDomainChange = (selectedValue) => {`
     //     setDomain(selectedValue);
     //
     //     // 실시간으로 전체 이메일 유효성 검사
@@ -455,7 +455,7 @@ const SignUpPage = () => {
                                         onChange={handleCustomDomainChange}
                                         onKeyDown={(e) => e.key === "Enter" && handleCustomDomainSubmit(e)}
                                         />
-                            )}
+``                            )}
                         </div>
                         {emailError && <p className="error-message">{emailError}</p>}
                         <Button type={"submit"} className={"submit-btn"}>이메일 인증</Button>
