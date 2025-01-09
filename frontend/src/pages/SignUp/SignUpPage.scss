@@ -34,6 +34,26 @@
           span{
             padding: 0.6rem .2rem;
           }
+          .input-button-wrap{
+            margin-bottom: initial;
+            .input-field{
+              flex-direction: row;
+              &.error{
+                input{
+                  height: initial;
+                  border: none;
+
+                  &:focus{
+                    box-shadow: none;
+                  }
+                }
+              }
+            }
+            .input-btn{
+              background: none;
+              color: $color-error;
+            }
+          }
         }
       }
 

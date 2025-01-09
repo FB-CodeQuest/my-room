@@ -9,6 +9,10 @@ import CheckBox from "../../components/CheckBox/CheckBox";
 import axiosInstance from "../../utils/axiosInstance";
 
 import {useRef, useState} from "react";
+import InputWithButton from "../../components/Input/InputWithButton";
+import {faCaretDown} from "@fortawesome/free-solid-svg-icons/faCaretDown";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faXmark} from "@fortawesome/free-solid-svg-icons/faXmark";
 
 const SignUpPage = () => {
     // Input 상태
@@ -42,13 +46,9 @@ const SignUpPage = () => {
     const [nameError, setNameError] = useState('');
     const [phoneNumberError, setPhoneNumberError] = useState('');
     const [birthDateError, setBirthDateError] = useState('');
-    const [domainError, setDomainError] = useState('');
 
     // ref
     const inputRef = useRef(null);
-    const [userId, setUserId] = useState('');
-    // const [phone, setPhone] = useState('');
-    // const [genderError, setGenderError] = useState('');
 
     // DropDown option
     const addressOptions =[
@@ -240,6 +240,10 @@ const SignUpPage = () => {
         setSelectedOption(value);
     }
 
+    const resetToDropdown = () => {
+        setDomain(""); // 기본값으로 복원
+    };
+
 
 
     /* 폼 제출 시 최종 유효성 검사 및 API요청 처리 */
@@ -313,10 +317,6 @@ const SignUpPage = () => {
 
         try {
             // API요청
-            console.log(gender);
-            console.log(gender.value);
-            console.log(genderOptions);
-            console.log(selectedOption);
             const response = await axiosInstance.post("/users/signup", {
                 email: `${email}@${domain}`,
                 password,
@@ -370,17 +370,24 @@ const SignUpPage = () => {
                                     onChange={handleDomainChange}
                                 />
                             ) : (
-                                    <Input
+                                    <InputWithButton
                                         ref={inputRef}
-                                        className={emailError ? "column error" : "column"}
+                                        className={emailError ? "error" : ""}
                                         type={"text"}
                                         id={"customDomain"}
                                         label={"직접입력"}
                                         placeholder={"직접입력"}
                                         value={customDomain}
+                                        children={<FontAwesomeIcon
+                                            icon={faXmark}
+                                            className="close-icon"
+                                            onClick={resetToDropdown}
+                                        />}
+                                        btnType={"button"}
                                         onChange={handleCustomDomainChange}
                                         onKeyDown={(e) => e.key === "Enter" && handleCustomDomainSubmit(e)}
-                                        />
+                                    />
+
                            )}
                         </div>
                         {emailError && <p className="error-message">{emailError}</p>}
