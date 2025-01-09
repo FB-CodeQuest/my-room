@@ -61,8 +61,8 @@ const SignUpPage = () => {
 
     // radio option
     const genderOptions =[
-        {value: "male", label: "남자"},
-        {value: "female", label: "여자"},
+        {value: "M", label: "남자"},
+        {value: "F", label: "여자"},
     ]
 
 
@@ -129,11 +129,12 @@ const SignUpPage = () => {
 
     // 도메인 선택
     const handleDomainChange = (selectedValue) => {
-        setDomain('custom');
-
         if (selectedValue === 'custom') {
+        setDomain('custom');
             setTimeout(() => { inputRef.current?.focus(); // "직접 입력" 필드로 포커스 이동
             }, 0);
+        } else {
+            setDomain(selectedValue);
         }
 
         if(!isValidFullEmail(email, selectedValue)) return;
@@ -249,7 +250,7 @@ const SignUpPage = () => {
         // 유효성 검사
 
         // 이메일 유효성 검사
-        if (!email || !isValidFullEmail(email)) {
+        if (!email || !isValidFullEmail(email,domain)) {
             setEmailError("올바른 이메일 주소를 입력해주세요.");
             isValid = false;
         } else {
@@ -289,8 +290,12 @@ const SignUpPage = () => {
         }
 
         // 생년월일 유효성 검사 (선택 항목, 입력된 경우만 확인)
+        const formattedBirthDate = birthDate.length === 6
+            ?`${birthDate.startsWith("0") || birthDate.startsWith("1") ? "20" : "19"}${birthDate.slice(0, 2)}-${birthDate.slice(2, 4)}-${birthDate.slice(4, 6)}`
+            : birthDate;
+
         if (birthDate && !isValidBirthDate(birthDate)) {
-            setBirthDateError("생년월일은 YYMMDD 형식으로 입력해주세요.");
+            setBirthDateError("생년월일은 YYYY-MM-DD 형식으로 입력해주세요.");
             isValid = false;
         } else {
             setBirthDateError("");
@@ -302,120 +307,41 @@ const SignUpPage = () => {
             isValid = false;
         }
 
-        // // 유효성 검사를 통과하지 못하면 폼 제출 차단
-        // if (!isValid) {
-        //     alert("폼을 올바르게 작성해주세요!");
-        //     return;
-        // }
+        if (!isValid) {
+            return; // 유효성 검사 실패 시 함수 종료
+        }
 
         try {
             // API요청
-            const response = await axiosInstance.post("/api/users/signup", {
-                userId,
+            console.log(gender);
+            console.log(gender.value);
+            console.log(genderOptions);
+            console.log(selectedOption);
+            const response = await axiosInstance.post("/users/signup", {
                 email: `${email}@${domain}`,
                 password,
                 name,
                 phone: phoneNumber,
-                birthDate,
-                gender
+                birthDate: formattedBirthDate,
+                gender : selectedOption
             });
             // API응답 데이터 처리
-            if (response.status === 200) {
-                const {name} = response.data;
-                alert(`환영합니다,${name}님!`);
+            if (response.status === 201) {
+                alert("회원가입이 성공적으로 완료되었습니다!");
                 window.location.href = "/";
             }
         } catch (error) {
+            console.error("회원가입 요청 실패:", error);
             if (error.response && error.response.status === 400) {
                 alert("회원가입 중 오류가 발생했습니다: " + error.response.data.message);
+            } else if (error.response && error.response.status === 500) {
+                alert("김강민때문이다");
+            }else {
+                alert("서버와의 통신 중 문제가 발생했습니다. 다시 시도해주세요.");
             }
         }
 
     };
-
-
-
-
-
-    // 이메일 유효성 검사 핸들러
-    //     const handleEmailChange = (e) => {
-    //         const value = e.target.value;
-    //         setEmail(value);
-    //
-    //         // 이메일 필드만 초기 검사
-    //         if (!value) {
-    //             setEmailError("이메일을 입력해주세요.");
-    //         } else {
-    //             setEmailError(""); // 에러 초기화
-    //         }
-    //     };
-
-    // 도메인 선택 핸들러
-    //     const handleDomainChange = (selectedValue) => {
-    //         setDomain(selectedValue);
-    //
-    //         // 도메인 선택 여부 확인
-    //         if (!selectedValue || selectedValue === "선택하세요") {
-    //                setDomainError("도메인을 선택해주세요.");
-    //         } else {
-    //             setDomainError(""); // 에러 초기화
-    //         }
-    //     };
-
-    // const handleDomainChange = (selectedValue) => {`
-    //     setDomain(selectedValue);
-    //
-    //     // 실시간으로 전체 이메일 유효성 검사
-    //     if (!isValidFullEmail(email, selectedValue)) {
-    //         return;
-    //     }
-    // };
-
-    // const handleDomainChange = (selectedValue) => {
-    //     if (selectedValue === "custom") {
-    //         setDomain("custom");
-    //         setTimeout(() => {
-    //             inputRef.current?.focus(); // "직접 입력" 필드로 포커스 이동
-    //         }, 0);
-    //     } else {
-    //         setDomain(selectedValue);
-    //     }
-    //
-    //     // 도메인 선택 여부 확인
-    //     if (!selectedValue || selectedValue === "선택하세요") {
-    //         setDomainError("도메인을 선택해주세요.");
-    //     } else {
-    //         setDomainError(""); // 에러 초기화
-    //     }
-    // };
-
-    // // 유효성 검사 통합
-    //     const validateFullEmail = () => {
-    //         if (!isValidFullEmail(email, domain)) {
-    //             setEmailError("올바른 이메일 주소를 입력해주세요.");
-    //             return false;
-    //         }
-    //         return true;
-    //     };
-    //
-
-
-
-    // 이메일 유효성 검사
-    // const handleEmailChange = (e) => {
-    //     const value = e.target.value;
-    //     setEmail(value);
-    //
-    //     if (!value) {
-    //         setEmailError("이메일을 입력해주세요.");
-    //     } else if (!isValidEmail(value)) {
-    //         setEmailError("올바른 이메일 형식이 아닙니다.");
-    //     } else {
-    //         setEmailError(""); // 에러 초기화
-    //     }
-    // };
-
-
 
 
     return(
@@ -455,7 +381,7 @@ const SignUpPage = () => {
                                         onChange={handleCustomDomainChange}
                                         onKeyDown={(e) => e.key === "Enter" && handleCustomDomainSubmit(e)}
                                         />
-``                            )}
+                           )}
                         </div>
                         {emailError && <p className="error-message">{emailError}</p>}
                         <Button type={"submit"} className={"submit-btn"}>이메일 인증</Button>

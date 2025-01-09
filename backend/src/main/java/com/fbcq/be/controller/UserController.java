@@ -38,7 +38,8 @@ public class UserController {
     @PostMapping("/signup")
     @Operation(summary = "사용자 회원가입", description = "새로운 사용자를 등록합니다.")
     public ResponseEntity<String> signup(@Validated @RequestBody SignUpRequest signUpRequest) {
-        log.info("SignUp request received: {}", signUpRequest.email());
+        log.info("SignUp request received: {}", signUpRequest);
+        System.out.println(signUpRequest);
         int result = userService.signUp(signUpRequest);
         if (result == 0) {
             log.warn("SignUp failed for email: {}", signUpRequest.email());

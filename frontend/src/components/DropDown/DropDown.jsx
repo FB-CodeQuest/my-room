@@ -2,9 +2,9 @@ import "./DropDown.scss";
 import {useEffect, useRef, useState} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCaretDown} from "@fortawesome/free-solid-svg-icons/faCaretDown";
-const DropDown = ({id, options, onChange, className}) => {
+const DropDown = ({id, options, onChange, className, value}) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [selectedValue, setSelectedValue] = useState('선택하세요');
+    const [selectedValue, setSelectedValue] = useState(value || '선택하세요');
     const optionRef = useRef(null);
 
     useEffect(() => {
@@ -15,6 +15,13 @@ const DropDown = ({id, options, onChange, className}) => {
                 : "0";
         }
     },[isOpen]);
+
+    useEffect(() => {
+        if (value) {
+            setSelectedValue(value);
+        }
+    }, [value]);
+
     const handleOptionClick = (value) => {
         setSelectedValue(value);
         onChange(value);
@@ -32,7 +39,7 @@ const DropDown = ({id, options, onChange, className}) => {
 
                 {selectedValue}
                 <FontAwesomeIcon
-                    icon={faCaretDown} // 아이콘 객체를 전달
+                    icon={faCaretDown}
                     className="dropdown-icon"
                 />
             </button>

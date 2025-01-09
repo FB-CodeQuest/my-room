@@ -1,10 +1,13 @@
 import "./Input.scss";
 import Button from "../Button/Button";
-const Input = ({label, type, id, value, onChange, placeholder, className, maxLength, showLabel=false, ref}) => {
+import Input from "./Input";
+
+const InputWithButton = ({label, type, id, value, onChange, placeholder, className, maxLength, showLabel=false, ref, children}) => {
     return(
-        <div className={`input-field ${className}`}>
+        <div className={"input-button-wrap"}>
             {showLabel && <label htmlFor={id}>{label}</label>}
-            <input
+            <Input
+                className={`input-field ${className}`}
                 ref={ref}
                 type={type}
                 id={id}
@@ -13,7 +16,10 @@ const Input = ({label, type, id, value, onChange, placeholder, className, maxLen
                 placeholder={placeholder}
                 maxLength={maxLength}
             />
+            <Button type={"submit"} className={"input-btn"}>{children}</Button>
         </div>
+
     );
 };
-export default Input;
+
+export default InputWithButton;

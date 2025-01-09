@@ -1,6 +1,7 @@
 import "./PasswordResetPage.scss";
 
-import Input, {InputWithButton} from "../../components/Input/Input";
+import Input from "../../components/Input/Input";
+import InputWithButton from "../../components/Input/InputWithButton";
 import Button from "../../components/Button/Button";
 import LinkButton from "../../components/LinkButton";
 import Form from "../../components/Form";

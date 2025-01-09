@@ -7,8 +7,8 @@ function App() {
   return (
     <>
      {/*<LoginPage />*/}
-     {/*   <SignUpPage />*/}
-        <PasswordResetPage/>
+        <SignUpPage />
+     {/*   <PasswordResetPage/>*/}
     </>
   );
 }
