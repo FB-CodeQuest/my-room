@@ -35,6 +35,9 @@
     }
   }
   &.error{
+    label{
+      color: $color-error;
+    }
     input{
       border: 1px solid #f00;
       &:focus{

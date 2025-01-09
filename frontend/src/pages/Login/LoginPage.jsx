@@ -33,7 +33,7 @@ const LoginPage = () => {
 
             // API응답 데이터 처리
             if (response.status === 200) {
-                const {userId, name, token} = response.data;
+                const {userId, name} = response.data;
                 alert(`환영합니다,${name}님!`);
                 window.location.href = "/";
             }

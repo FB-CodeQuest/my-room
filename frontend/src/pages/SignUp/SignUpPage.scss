@@ -16,6 +16,9 @@
 
   .signup-container {
     .signup-form {
+      label{
+        font-weight: 700;
+      }
       .input-group {
         display: flex;
         flex-direction: column;

@@ -2,7 +2,7 @@ import "./DropDown.scss";
 import {useEffect, useRef, useState} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCaretDown} from "@fortawesome/free-solid-svg-icons/faCaretDown";
-const DropDown = ({id, options, onChange}) => {
+const DropDown = ({id, options, onChange, className}) => {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedValue, setSelectedValue] = useState('선택하세요');
     const optionRef = useRef(null);
@@ -22,7 +22,7 @@ const DropDown = ({id, options, onChange}) => {
     };
 
     return(
-        <div className={"dropdown-group"}>
+        <div className={`dropdown-group ${className}`}>
             <button
                 type="button"
                 id={id}
