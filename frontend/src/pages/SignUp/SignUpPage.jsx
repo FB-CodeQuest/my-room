@@ -66,71 +66,16 @@ const SignUpPage = () => {
     ]
 
 
-    // 전체 이메일 유효성 검사
-    // const isValidFullEmail = (email, domain) => {
-    //     if (!email) {
-    //         setEmailError("이메일을 입력해주세요.");
-    //         return false;
-    //     }
-    //
-    //     if (!domain || domain === "선택하세요") {
-    //         setEmailError("도메인을 선택해주세요.");
-    //         return false;
-    //     }
-    //
-    //     const fullEmail = `${email}@${domain}`;
-    //     const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
-    //
-    //     if (!emailRegex.test(fullEmail)) {
-    //         setEmailError("올바른 이메일 형식이 아닙니다.");
-    //         return false;
-    //     }
-    //
-    //     setEmailError(""); // 에러 초기화
-    //     return true;
-    // };
-
-    // 개별 유효성 검사 함수
-    // const isValidPassword = (password) => /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/.test(password);
-    // const isValidPhoneNumber = (phoneNumber) => /^01[0-9]-?\d{3,4}-?\d{4}$/.test(phoneNumber);
-    // const isValidBirthDate = (birthDate) => /^\d{6}$/.test(birthDate);
-
-    // const isValidEmail = (email) => {
-    //     const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
-    //     return emailRegex.test(email);
-    // };
-    // const isValidPassword = (password) => {
-    //     const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/;
-    //     return passwordRegex.test(password);
-    // };
-
-    // const isValidPhoneNumber = (phoneNumber) => {
-    //     const phoneRegex = /^01[0-9]-?\d{3,4}-?\d{4}$/; // 한국 휴대전화 형식
-    //     return phoneRegex.test(phoneNumber);
-    // };
-
-    // const isValidBirthDate = (birthDate) => {
-    //     const birthRegex = /^\d{6}$/; // YYMMDD 형식
-    //     return birthRegex.test(birthDate);
-    // };
-
     /* 이벤트 핸들러 */
 
     // 이메일 필드
     const handleEmailChange = (e) => {
         const value = e.target.value;
         setEmail(value);
-
-        const emailError = validateEmail(value, domain);
-        setEmailError(emailError);
-
-        // 실시간으로 전체 이메일 유효성 검사
-        // if (!validateEmail(value, domain)) {
-        //     return;
-        // }
+        setEmailError(validateEmail(value, domain));
     };
 
-    // 도메인 선택
+    // 드롭다운 도메인 선택
     const handleDomainChange = (selectedValue) => {
         if (selectedValue === 'custom') {
         setDomain('custom');
@@ -139,91 +84,69 @@ const SignUpPage = () => {
         } else {
             setDomain(selectedValue);
         }
-
         // 이메일 유효성 검사 수행
-        const emailError = validateEmail(email, selectedValue); // 유효성 검사 결과 메시지
-        setEmailError(emailError); // 에러 메시지 업데이트
-        // if(!validateEmail(email, selectedValue)) return;
+        setEmailError(validateEmail(email, selectedValue)); // 에러 메시지 업데이트
     };
-
+    // 도메인 상태 업데이트 유효성검사(직접입력)
     const handleCustomDomainChange = (e) => {
         const value = e.target.value;
         setCustomDomain(value); // "직접 입력" 값 업데이트
-
-        const emailError = validateEmail(email, value); // "직접 입력" 값 사용
-        setEmailError(emailError); // 에러 메시지 업데이트
+        setEmailError(validateEmail(email, value)); // 에러 메시지 업데이트
     };
 
+    // 최종 도메인
+    const handleCustomDomainSubmit = (e) => {
+        e.preventDefault();
+        if (customDomain.trim() !== '') {
+            setDomain(customDomain);
+        }
+    };
+
+    // 도메인 기본값으로 복원
+    const resetToDropdown = () => {
+        setDomain("");
+    };
     // 비밀번호 필드
     const handlePasswordChange = (e) => {
         const value = e.target.value;
         setPassword(value);
-
-        const error = validatePassword(value);
-        setPasswordError(error);
-
-        // if (!value) {
-        //     setPasswordError("비밀번호를 입력해주세요.");
-        // } else if (!isValidPassword(value)) {
-        //     setPasswordError("비밀번호는 영문, 숫자, 특수문자를 포함하여 8~25자여야 합니다.");
-        // } else {
-        //     setPasswordError(""); // 에러 초기화
-        // }
+        setPasswordError(validatePassword(value));
     };
 
     // 비밀번호 확인 필드
     const handlePasswordCheckChange = (e) => {
         const value = e.target.value;
         setPasswordCheck(value);
-
-        if (value !== password) {
-            setPasswordCheckError("비밀번호가 일치하지 않습니다.");
-        } else {
-            setPasswordCheckError(""); // 에러 초기화
-        }
+        setPasswordCheckError(value !== password ? "" : "비밀번호가 일치하지 않습니다.");
     };
 
     // 이름 필드
     const handleNameChange = (e) => {
         const value = e.target.value;
         setName(value);
-
-        if (!value) {
-            setNameError("이름을 입력해주세요.");
-        } else {
-            setNameError(""); // 에러 초기화
-        }
+        setNameError(value.trim() === "" ? "이름을 입력해주세요." : "");
     };
 
     // 전화번호 필드
     const handlePhoneNumberChange = (e) => {
         const value = e.target.value;
         setPhoneNumber(value);
-
-        const error = validatePhoneNumber(value);
-        setPhoneNumberError(error);
-
-        // if (value && !isValidPhoneNumber(value)) {
-        //     setPhoneNumberError("올바른 휴대폰 번호를 입력해주세요. (예: 01012345678)");
-        // } else {
-        //     setPhoneNumberError(""); // 에러 초기화
-        // }
+        setPhoneNumberError(validatePhoneNumber(value));
     };
 
     // 생년월일 필드
     const handleBirthDateChange = (e) => {
         const value = e.target.value;
         setBirthDate(value);
-
-        const birthDateError = validateBirthDate(value);
-        setBirthDateError(error);
-
-        // if (value && !isValidBirthDate(value)) {
-        //     setBirthDateError("생년월일은 YYMMDD 형식으로 입력해주세요.");
-        // } else {
-        //     setBirthDateError(""); // 에러 초기화
-        // }
+        const { message } = validateBirthDate(value);
+        setBirthDateError(message);
     };
+
+    // 라디오 버튼
+    const handleRadioOptionChange = (value) => {
+        console.log("선택된 옵션:", value);
+        setSelectedOption(value);
+    }
 
     // 체크박스
     const handleAllChange = () =>{
@@ -235,9 +158,9 @@ const SignUpPage = () => {
             marketing: newChecked,
             sms: newChecked,
             email: newChecked,
-        })
-    }
-
+        });
+    };
+    // 체크박스 상태
     const handleItemChange = (key) => {
         setCheckedItems((prev) => {
             const newCheckedItems = {...prev, [key] : !prev[key]};
@@ -246,62 +169,25 @@ const SignUpPage = () => {
         });
     };
 
-
-    const handleCustomDomainSubmit = (e) => {
-        e.preventDefault();
-        if (customDomain.trim() !== '') {
-            setDomain(customDomain);
-        }
-    };
-
-    const handleRadioOptionChange = (value) => {
-        console.log("선택된 옵션:", value);
-        setSelectedOption(value);
-    }
-
-    const resetToDropdown = () => {
-        setDomain(""); // 기본값으로 복원
-    };
-
-
-
     /* 폼 제출 시 최종 유효성 검사 및 API요청 처리 */
     const handleSignup = async (e) => {
         e.preventDefault();
-        let isValid = true;
 
-        // 유효성 검사
+        let isValid = true;
 
         // 이메일 유효성 검사
         const emailError = validateEmail(email, domain);
         if(emailError){
             setEmailError(emailError);
             isValid = false;
-        }else{
-            setEmailError("");
         }
-
-        // if (!email || !validateEmail(email,domain)) {
-        //     setEmailError("올바른 이메일 주소를 입력해주세요.");
-        //     isValid = false;
-        // } else {
-        //     setEmailError("");
-        // }
 
         // 비밀번호 유효성 검사
         const passwordError = validatePassword(password);
         if(passwordError){
             setPasswordError(passwordError);
             isValid = false;
-        }else{
-            setPasswordError("");
         }
-        // if (!password || !validatePassword(password)) {
-        //     setPasswordError("비밀번호는 영문, 숫자, 특수문자를 포함하여 8~25자여야 합니다.");
-        //     isValid = false;
-        // } else {
-        //     setPasswordError("");
-        // }
 
         // 비밀번호 확인 유효성 검사
         if (password !== passwordCheck) {
@@ -312,7 +198,7 @@ const SignUpPage = () => {
         }
 
         // 이름 유효성 검사
-        if (!name) {
+        if (name.trim() !=="") {
             setNameError("이름을 입력해주세요.");
             isValid = false;
         } else {
@@ -327,31 +213,15 @@ const SignUpPage = () => {
         }else{
             setPhoneNumberError("");
         }
-        // if (phoneNumber && !validatePhoneNumber(phoneNumber)) {
-        //     setPhoneNumberError("올바른 휴대폰 번호를 입력해주세요. (예: 01012345678)");
-        //     isValid = false;
-        // } else {
-        //     setPhoneNumberError("");
-        // }
 
         // 생년월일 유효성 검사
-        const { message: birthDateError, formatted } = validateBirthDate(birthDate);
-        if (birthDateError) {
-            setBirthDateError(birthDateError);
+        const { message, formatted } = validateBirthDate(birthDate);
+        if (message) {
+            setBirthDateError(message);
             isValid = false;
         } else {
             setBirthDateError("");
         }
-        // const formattedBirthDate = birthDate.length === 6
-        //     ?`${birthDate.startsWith("0") || birthDate.startsWith("1") ? "20" : "19"}${birthDate.slice(0, 2)}-${birthDate.slice(2, 4)}-${birthDate.slice(4, 6)}`
-        //     : birthDate;
-        //
-        // if (birthDate && !validateBirthDate(birthDate)) {
-        //     setBirthDateError("생년월일은 YYYY-MM-DD 형식으로 입력해주세요.");
-        //     isValid = false;
-        // } else {
-        //     setBirthDateError("");
-        // }
 
         // 필수 체크박스 유효성 검사
         if (!checkedItems.terms || !checkedItems.privacy) {
@@ -359,9 +229,7 @@ const SignUpPage = () => {
             isValid = false;
         }
 
-        if (!isValid) {
-            return; // 유효성 검사 실패 시 함수 종료
-        }
+        if (!isValid) return console.log("유효성 검사 실패로 함수 종료");
 
         try {
             // API요청

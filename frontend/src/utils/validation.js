@@ -34,12 +34,12 @@ export const validateBirthDate = (birthDate) => {
 
     const birthDateRegex = /^\d{6}$/; // YYMMDD 형식
     if (!birthDateRegex.test(birthDate)) {
-        return { message: "올바른 생년월일을 입력해주세요. (예: YYMMDD)", formatted: "" };
+        return { message: "올바른 생년월일을 입력해주세요. (예: 940715)", formatted: "" };
     }
 
     // 생년월일 포맷 변환 (YYMMDD → YYYY-MM-DD)
     const formattedBirthDate = `${birthDate.startsWith("0") || birthDate.startsWith("1") ? "20" : "19"}${birthDate.slice(0, 2)}-${birthDate.slice(2, 4)}-${birthDate.slice(4, 6)}`;
 
-    return { isValid: true, message: "", formatted: formattedBirthDate };
+    return {message: "", formatted: formattedBirthDate };
 }
 
