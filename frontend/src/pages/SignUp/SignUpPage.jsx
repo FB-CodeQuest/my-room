@@ -121,8 +121,8 @@ const SignUpPage = () => {
         const value = e.target.value;
         setEmail(value);
 
-        const error = validateEmail(value);
-        setEmailError(error);
+        const emailError = validateEmail(value, domain);
+        setEmailError(emailError);
 
         // 실시간으로 전체 이메일 유효성 검사
         // if (!validateEmail(value, domain)) {
@@ -215,7 +215,7 @@ const SignUpPage = () => {
         const value = e.target.value;
         setBirthDate(value);
 
-        const error = validateBirthDate(value);
+        const birthDateError = validateBirthDate(value);
         setBirthDateError(error);
 
         // if (value && !isValidBirthDate(value)) {
