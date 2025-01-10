@@ -190,12 +190,16 @@ const SignUpPage = () => {
         }
 
         // 비밀번호 확인 유효성 검사
-        if (password !== passwordCheck) {
+        if (passwordCheck.trim() === "") {
+            setPasswordCheckError("확인을 위해 비밀번호를 한 번 더 입력해주세요.");
+            isValid = false;
+        } else if (passwordCheck !== password) {
             setPasswordCheckError("비밀번호가 일치하지 않습니다.");
             isValid = false;
         } else {
             setPasswordCheckError("");
         }
+
 
         // 이름 유효성 검사
         if (name.trim() === "") {
