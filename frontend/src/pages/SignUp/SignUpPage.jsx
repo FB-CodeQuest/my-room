@@ -10,9 +10,9 @@ import axiosInstance from "../../utils/axiosInstance";
 
 import {useRef, useState} from "react";
 import InputWithButton from "../../components/Input/InputWithButton";
-import {faCaretDown} from "@fortawesome/free-solid-svg-icons/faCaretDown";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faXmark} from "@fortawesome/free-solid-svg-icons/faXmark";
+import {validateBirthDate, validateEmail, validatePassword, validatePhoneNumber} from "../../utils/validation";
 
 const SignUpPage = () => {
     // Input 상태
@@ -67,28 +67,28 @@ const SignUpPage = () => {
 
 
     // 전체 이메일 유효성 검사
-    const isValidFullEmail = (email, domain) => {
-        if (!email) {
-            setEmailError("이메일을 입력해주세요.");
-            return false;
-        }
-
-        if (!domain || domain === "선택하세요") {
-            setEmailError("도메인을 선택해주세요.");
-            return false;
-        }
-
-        const fullEmail = `${email}@${domain}`;
-        const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
-
-        if (!emailRegex.test(fullEmail)) {
-            setEmailError("올바른 이메일 형식이 아닙니다.");
-            return false;
-        }
-
-        setEmailError(""); // 에러 초기화
-        return true;
-    };
+    // const isValidFullEmail = (email, domain) => {
+    //     if (!email) {
+    //         setEmailError("이메일을 입력해주세요.");
+    //         return false;
+    //     }
+    //
+    //     if (!domain || domain === "선택하세요") {
+    //         setEmailError("도메인을 선택해주세요.");
+    //         return false;
+    //     }
+    //
+    //     const fullEmail = `${email}@${domain}`;
+    //     const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+    //
+    //     if (!emailRegex.test(fullEmail)) {
+    //         setEmailError("올바른 이메일 형식이 아닙니다.");
+    //         return false;
+    //     }
+    //
+    //     setEmailError(""); // 에러 초기화
+    //     return true;
+    // };
 
     // 개별 유효성 검사 함수
     // const isValidPassword = (password) => /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/.test(password);
@@ -99,20 +99,20 @@ const SignUpPage = () => {
     //     const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
     //     return emailRegex.test(email);
     // };
-    const isValidPassword = (password) => {
-        const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/;
-        return passwordRegex.test(password);
-    };
+    // const isValidPassword = (password) => {
+    //     const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/;
+    //     return passwordRegex.test(password);
+    // };
 
-    const isValidPhoneNumber = (phoneNumber) => {
-        const phoneRegex = /^01[0-9]-?\d{3,4}-?\d{4}$/; // 한국 휴대전화 형식
-        return phoneRegex.test(phoneNumber);
-    };
+    // const isValidPhoneNumber = (phoneNumber) => {
+    //     const phoneRegex = /^01[0-9]-?\d{3,4}-?\d{4}$/; // 한국 휴대전화 형식
+    //     return phoneRegex.test(phoneNumber);
+    // };
 
-    const isValidBirthDate = (birthDate) => {
-        const birthRegex = /^\d{6}$/; // YYMMDD 형식
-        return birthRegex.test(birthDate);
-    };
+    // const isValidBirthDate = (birthDate) => {
+    //     const birthRegex = /^\d{6}$/; // YYMMDD 형식
+    //     return birthRegex.test(birthDate);
+    // };
 
     /* 이벤트 핸들러 */
 
@@ -121,10 +121,13 @@ const SignUpPage = () => {
         const value = e.target.value;
         setEmail(value);
 
+        const error = validateEmail(value);
+        setEmailError(error);
+
         // 실시간으로 전체 이메일 유효성 검사
-        if (!isValidFullEmail(value, domain)) {
-            return;
-        }
+        // if (!validateEmail(value, domain)) {
+        //     return;
+        // }
     };
 
     // 도메인 선택
@@ -137,11 +140,18 @@ const SignUpPage = () => {
             setDomain(selectedValue);
         }
 
-        if(!isValidFullEmail(email, selectedValue)) return;
+        // 이메일 유효성 검사 수행
+        const emailError = validateEmail(email, selectedValue); // 유효성 검사 결과 메시지
+        setEmailError(emailError); // 에러 메시지 업데이트
+        // if(!validateEmail(email, selectedValue)) return;
     };
 
     const handleCustomDomainChange = (e) => {
-        setCustomDomain(e.target.value); // "직접 입력" 값 업데이트
+        const value = e.target.value;
+        setCustomDomain(value); // "직접 입력" 값 업데이트
+
+        const emailError = validateEmail(email, value); // "직접 입력" 값 사용
+        setEmailError(emailError); // 에러 메시지 업데이트
     };
 
     // 비밀번호 필드
@@ -149,13 +159,16 @@ const SignUpPage = () => {
         const value = e.target.value;
         setPassword(value);
 
-        if (!value) {
-            setPasswordError("비밀번호를 입력해주세요.");
-        } else if (!isValidPassword(value)) {
-            setPasswordError("비밀번호는 영문, 숫자, 특수문자를 포함하여 8~25자여야 합니다.");
-        } else {
-            setPasswordError(""); // 에러 초기화
-        }
+        const error = validatePassword(value);
+        setPasswordError(error);
+
+        // if (!value) {
+        //     setPasswordError("비밀번호를 입력해주세요.");
+        // } else if (!isValidPassword(value)) {
+        //     setPasswordError("비밀번호는 영문, 숫자, 특수문자를 포함하여 8~25자여야 합니다.");
+        // } else {
+        //     setPasswordError(""); // 에러 초기화
+        // }
     };
 
     // 비밀번호 확인 필드
@@ -182,16 +195,19 @@ const SignUpPage = () => {
         }
     };
 
-    // 전화번호 필드 ]
+    // 전화번호 필드
     const handlePhoneNumberChange = (e) => {
         const value = e.target.value;
         setPhoneNumber(value);
 
-        if (value && !isValidPhoneNumber(value)) {
-            setPhoneNumberError("올바른 휴대폰 번호를 입력해주세요. (예: 01012345678)");
-        } else {
-            setPhoneNumberError(""); // 에러 초기화
-        }
+        const error = validatePhoneNumber(value);
+        setPhoneNumberError(error);
+
+        // if (value && !isValidPhoneNumber(value)) {
+        //     setPhoneNumberError("올바른 휴대폰 번호를 입력해주세요. (예: 01012345678)");
+        // } else {
+        //     setPhoneNumberError(""); // 에러 초기화
+        // }
     };
 
     // 생년월일 필드
@@ -199,11 +215,14 @@ const SignUpPage = () => {
         const value = e.target.value;
         setBirthDate(value);
 
-        if (value && !isValidBirthDate(value)) {
-            setBirthDateError("생년월일은 YYMMDD 형식으로 입력해주세요.");
-        } else {
-            setBirthDateError(""); // 에러 초기화
-        }
+        const error = validateBirthDate(value);
+        setBirthDateError(error);
+
+        // if (value && !isValidBirthDate(value)) {
+        //     setBirthDateError("생년월일은 YYMMDD 형식으로 입력해주세요.");
+        // } else {
+        //     setBirthDateError(""); // 에러 초기화
+        // }
     };
 
     // 체크박스
@@ -254,23 +273,38 @@ const SignUpPage = () => {
         // 유효성 검사
 
         // 이메일 유효성 검사
-        if (!email || !isValidFullEmail(email,domain)) {
-            setEmailError("올바른 이메일 주소를 입력해주세요.");
+        const emailError = validateEmail(email, domain);
+        if(emailError){
+            setEmailError(emailError);
             isValid = false;
-        } else {
+        }else{
             setEmailError("");
         }
 
+        // if (!email || !validateEmail(email,domain)) {
+        //     setEmailError("올바른 이메일 주소를 입력해주세요.");
+        //     isValid = false;
+        // } else {
+        //     setEmailError("");
+        // }
+
         // 비밀번호 유효성 검사
-        if (!password || !isValidPassword(password)) {
-            setPasswordError("비밀번호는 영문, 숫자, 특수문자를 포함하여 8~25자여야 합니다.");
+        const passwordError = validatePassword(password);
+        if(passwordError){
+            setPasswordError(passwordError);
             isValid = false;
-        } else {
+        }else{
             setPasswordError("");
         }
+        // if (!password || !validatePassword(password)) {
+        //     setPasswordError("비밀번호는 영문, 숫자, 특수문자를 포함하여 8~25자여야 합니다.");
+        //     isValid = false;
+        // } else {
+        //     setPasswordError("");
+        // }
 
         // 비밀번호 확인 유효성 검사
-        if (!passwordCheck || password !== passwordCheck) {
+        if (password !== passwordCheck) {
             setPasswordCheckError("비밀번호가 일치하지 않습니다.");
             isValid = false;
         } else {
@@ -286,24 +320,38 @@ const SignUpPage = () => {
         }
 
         // 전화번호 유효성 검사 (선택 항목, 입력된 경우만 확인)
-        if (phoneNumber && !isValidPhoneNumber(phoneNumber)) {
-            setPhoneNumberError("올바른 휴대폰 번호를 입력해주세요. (예: 01012345678)");
+        const phoneNumberError = validatePhoneNumber(phoneNumber);
+        if (phoneNumberError) {
+            setPhoneNumberError(phoneNumberError);
             isValid = false;
-        } else {
+        }else{
             setPhoneNumberError("");
         }
+        // if (phoneNumber && !validatePhoneNumber(phoneNumber)) {
+        //     setPhoneNumberError("올바른 휴대폰 번호를 입력해주세요. (예: 01012345678)");
+        //     isValid = false;
+        // } else {
+        //     setPhoneNumberError("");
+        // }
 
-        // 생년월일 유효성 검사 (선택 항목, 입력된 경우만 확인)
-        const formattedBirthDate = birthDate.length === 6
-            ?`${birthDate.startsWith("0") || birthDate.startsWith("1") ? "20" : "19"}${birthDate.slice(0, 2)}-${birthDate.slice(2, 4)}-${birthDate.slice(4, 6)}`
-            : birthDate;
-
-        if (birthDate && !isValidBirthDate(birthDate)) {
-            setBirthDateError("생년월일은 YYYY-MM-DD 형식으로 입력해주세요.");
+        // 생년월일 유효성 검사
+        const { message: birthDateError, formatted } = validateBirthDate(birthDate);
+        if (birthDateError) {
+            setBirthDateError(birthDateError);
             isValid = false;
         } else {
             setBirthDateError("");
         }
+        // const formattedBirthDate = birthDate.length === 6
+        //     ?`${birthDate.startsWith("0") || birthDate.startsWith("1") ? "20" : "19"}${birthDate.slice(0, 2)}-${birthDate.slice(2, 4)}-${birthDate.slice(4, 6)}`
+        //     : birthDate;
+        //
+        // if (birthDate && !validateBirthDate(birthDate)) {
+        //     setBirthDateError("생년월일은 YYYY-MM-DD 형식으로 입력해주세요.");
+        //     isValid = false;
+        // } else {
+        //     setBirthDateError("");
+        // }
 
         // 필수 체크박스 유효성 검사
         if (!checkedItems.terms || !checkedItems.privacy) {
@@ -322,7 +370,7 @@ const SignUpPage = () => {
                 password,
                 name,
                 phone: phoneNumber,
-                birthDate: formattedBirthDate,
+                birthDate: formatted,
                 gender : selectedOption
             });
             // API응답 데이터 처리
@@ -462,7 +510,6 @@ const SignUpPage = () => {
                             options={genderOptions}
                             onChange={handleRadioOptionChange}
                         />
-                        {/*{genderError && <p className="error-message">{genderError}</p>}*/}
                     </div>
                     <div className={"agreement-group"}>
                        <CheckBox
