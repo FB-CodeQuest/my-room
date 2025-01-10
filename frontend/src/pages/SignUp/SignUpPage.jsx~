@@ -181,7 +181,7 @@ const SignUpPage = () => {
 
 
         // 이메일 유효성 검사
-        const emailError = validateEmail(email, currentDomain);
+        const emailError = validateEmail(email, domain);
         if(emailError){
             setEmailError(emailError);
             isValid = false;
