@@ -6,7 +6,7 @@ import DropDown from "../../components/DropDown/DropDown";
 import Button from "../../components/Button/Button";
 import RadioButton from "../../components/RadioButton/RadioButton";
 import CheckBox from "../../components/CheckBox/CheckBox";
-import {useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import InputWithButton from "../../components/Input/InputWithButton";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faXmark} from "@fortawesome/free-solid-svg-icons/faXmark";
@@ -71,20 +71,21 @@ const SignUpPage = () => {
     const handleEmailChange = (e) => {
         const value = e.target.value;
         setEmail(value);
-        setEmailError(validateEmail(value, domain));
+        const currentDomain = domain === 'custom' ? customDomain : domain;
+        setEmailError(validateEmail(value, currentDomain));
     };
 
     // 드롭다운 도메인 선택
     const handleDomainChange = (selectedValue) => {
         if (selectedValue === 'custom') {
-        setDomain('custom');
+            setDomain('custom');
             setTimeout(() => { inputRef.current?.focus(); // "직접 입력" 필드로 포커스 이동
             }, 0);
         } else {
             setDomain(selectedValue);
         }
+            setEmailError(validateEmail(email, selectedValue)); // 에러 메시지 업데이트
         // 이메일 유효성 검사 수행
-        setEmailError(validateEmail(email, selectedValue)); // 에러 메시지 업데이트
     };
     // 도메인 상태 업데이트 유효성검사(직접입력)
     const handleCustomDomainChange = (e) => {
@@ -105,6 +106,7 @@ const SignUpPage = () => {
     const resetToDropdown = () => {
         setDomain("");
     };
+
     // 비밀번호 필드
     const handlePasswordChange = (e) => {
         const value = e.target.value;
@@ -304,6 +306,7 @@ const SignUpPage = () => {
                                                 onClick={resetToDropdown}
                                             />}
                                             btnType={"button"}
+                                            btnClassName={"close"}
                                             onChange={handleCustomDomainChange}
                                             onKeyDown={(e) => e.key === "Enter" && handleCustomDomainSubmit(e)}
                                         />
