@@ -4,7 +4,7 @@ export const validateEmail = (email, domain = null) => {
 
     if(domain !== null){
         if (!domain || domain === "선택하세요") return "도메인을 선택해주세요.";
-        const email = `${email}@${domain}`;
+        email = `${email}@${domain}`;
 
     }
         const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;

@@ -21,6 +21,7 @@ const LoginPage = () => {
 
     const [emailError, setEmailError] = useState('');
     const [passwordError, setPasswordError] = useState('');
+
     const handleValidation = () => {
         let isValid = true;
 
@@ -42,6 +43,10 @@ const LoginPage = () => {
         }
         return isValid;
     }
+
+    const handleChange = (e) => {
+        setIsChecked((prev) => !prev);
+    };
     const handleLogin = async (e) => {
         e.preventDefault();
         if (!handleValidation()) return;
@@ -51,17 +56,13 @@ const LoginPage = () => {
             alert("환영합니다");
             window.location.href = "/";
         } catch (error) {
-            console.error("로그인 에러:", error , error.statusCode); // 에러 로그 확인
+            console.error("로그인 에러:", error , error.statusCode);
             alert(error.message || "로그인 요청중 문제가 발생했습니다.")
 
         } finally {
             setIsLoading(false);
         }
     }
-    const handleChange = (e) => {
-        setIsChecked((prev) => !prev);
-    };
-
 
     return (
         <div className={"login"}>
