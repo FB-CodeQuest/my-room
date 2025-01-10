@@ -6,8 +6,8 @@ import PasswordResetPage from "./pages/PasswordReset/PasswordResetPage";
 function App() {
   return (
     <>
-     {/*<LoginPage />*/}
-        <SignUpPage />
+     <LoginPage />
+     {/*   <SignUpPage />*/}
         {/*<PasswordResetPage/>*/}
     </>
   );

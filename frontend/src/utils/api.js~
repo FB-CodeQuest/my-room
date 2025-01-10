@@ -23,8 +23,11 @@ export const signup = async (userData) => {
 // 로그인 API 호출 함수
 export const login = async (email,password) => {
     try{
-        const response = await axiosInstance.post("/users/login",{email, password});
-        console.log("API 응답 데이터:", response.data);
+        const response = await axiosInstance.post("/users/login",{
+            email,
+            password
+        });
+
         if(response.status === 200){
             return response.data;
         }

@@ -1,13 +1,16 @@
 // 이메일 유효성 검사
-export const validateEmail = (email, domain) => {
+export const validateEmail = (email, domain = null) => {
     if (!email) return "이메일을 입력해주세요.";
-    if (!domain || domain === "선택하세요") return "도메인을 선택해주세요.";
 
-    const fullEmail = `${email}@${domain}`;
-    const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
-    if (!emailRegex.test(fullEmail)) return "올바른 이메일 형식이 아닙니다.";
+    if(domain !== null){
+        if (!domain || domain === "선택하세요") return "도메인을 선택해주세요.";
+        const email = `${email}@${domain}`;
 
-    return "";
+    }
+        const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+        if (!emailRegex.test(email)) return "올바른 이메일 형식이 아닙니다.";
+
+        return "";
 };
 
 // 비밀번호 유효성 검사

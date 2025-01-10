@@ -8,7 +8,8 @@ import LinkButton from "../../components/LinkButton";
 import ToggleButton from "../../components/ToggleButton/ToggleButton";
 
 import {useState} from "react";
-import axiosInstance from "../../utils/axiosInstance";
+import {login} from "../../utils/api";
+import {validateEmail, validatePassword} from "../../utils/validation";
 const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -20,30 +21,38 @@ const LoginPage = () => {
 
     const [emailError, setEmailError] = useState('');
     const [passwordError, setPasswordError] = useState('');
+    const handleValidation = () => {
+        let isValid = true;
+
+        const emailError = validateEmail(email);
+
+        if (emailError) {
+            setEmailError(emailError);
+            isValid = false;
+        } else {
+            setEmailError("");
+        }
+
+        const passwordError = validatePassword(password)
+        if (passwordError) {
+            setPasswordError(passwordError)
+            isValid = false;
+        } else {
+            setPasswordError("");
+        }
+        return isValid;
+    }
     const handleLogin = async (e) => {
         e.preventDefault();
         if (!handleValidation()) return;
         setIsLoading(true);
         try {
-            // API요청
-            const response = await axiosInstance.post("/users/login", {
-                email,
-                password
-            });
-
-            // API응답 데이터 처리
-            if (response.status === 200) {
-                const {userId, name} = response.data;
-                alert(`환영합니다,${name}님!`);
-                window.location.href = "/";
-            }
+            const data = await login(email,password);
+            alert("환영합니다");
+            window.location.href = "/";
         } catch (error) {
-            if (error.response && error.response.status === 401) {
-                alert("이메일 또는 비밀번호가 일지하지 않습니다");
-            } else {
-                alert("로그인 요청 중 문제가 발생했습니다");
-                console.log("로그인 문제발생")
-            }
+            console.error("로그인 에러:", error , error.statusCode); // 에러 로그 확인
+            alert(error.message || "로그인 요청중 문제가 발생했습니다.")
 
         } finally {
             setIsLoading(false);
@@ -53,33 +62,6 @@ const LoginPage = () => {
         setIsChecked((prev) => !prev);
     };
 
-    // 유효성 검사 함수
-    const isValidEmail = (email) => {
-        const emailRegex = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-za-z0-9\-]+/
-        return emailRegex.test(email);
-    };
-    const isValidPassword = (password) => {
-        const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,12}$/;
-        return passwordRegex.test(password);
-    }
-
-    const handleValidation = () => {
-        let isValid = true;
-
-        if (!isValidEmail(email)) {
-            setEmailError("올바른 이메일 주소를 입력해주세요")
-            isValid = false;
-        } else {
-            setEmailError("");
-        }
-        if (!isValidPassword(password)) {
-            setPasswordError("올바른 비밀번호를 입력해주세요")
-            isValid = false;
-        } else {
-            setPasswordError("");
-        }
-        return isValid;
-    }
 
     return (
         <div className={"login"}>
