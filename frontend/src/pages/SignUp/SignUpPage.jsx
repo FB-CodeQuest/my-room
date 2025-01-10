@@ -7,12 +7,12 @@ import Button from "../../components/Button/Button";
 import RadioButton from "../../components/RadioButton/RadioButton";
 import CheckBox from "../../components/CheckBox/CheckBox";
 import axiosInstance from "../../utils/axiosInstance";
-
 import {useRef, useState} from "react";
 import InputWithButton from "../../components/Input/InputWithButton";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faXmark} from "@fortawesome/free-solid-svg-icons/faXmark";
 import {validateBirthDate, validateEmail, validatePassword, validatePhoneNumber} from "../../utils/validation";
+import {signup} from "../../utils/api";
 
 const SignUpPage = () => {
     // Input 상태
@@ -117,7 +117,7 @@ const SignUpPage = () => {
     const handlePasswordCheckChange = (e) => {
         const value = e.target.value;
         setPasswordCheck(value);
-        setPasswordCheckError(value !== password ? "" : "비밀번호가 일치하지 않습니다.");
+        setPasswordCheckError(value !== password ? "비밀번호가 일치하지 않습니다." : "");
     };
 
     // 이름 필드
@@ -198,7 +198,7 @@ const SignUpPage = () => {
         }
 
         // 이름 유효성 검사
-        if (name.trim() !=="") {
+        if (name.trim() === "") {
             setNameError("이름을 입력해주세요.");
             isValid = false;
         } else {
@@ -229,31 +229,31 @@ const SignUpPage = () => {
             isValid = false;
         }
 
-        if (!isValid) return console.log("유효성 검사 실패로 함수 종료");
+        if (!isValid) {
+            console.log("유효성 검사 실패로 함수 종료")
+            return
+        };
 
         try {
             // API요청
-            const response = await axiosInstance.post("/users/signup", {
+            const userData={
                 email: `${email}@${domain}`,
                 password,
                 name,
                 phone: phoneNumber,
                 birthDate: formatted,
                 gender : selectedOption
-            });
+            };
+            const response = await signup(userData);
+
             // API응답 데이터 처리
-            if (response.status === 201) {
                 alert("회원가입이 성공적으로 완료되었습니다!");
                 window.location.href = "/";
-            }
         } catch (error) {
-            console.error("회원가입 요청 실패:", error);
-            if (error.response && error.response.status === 400) {
-                alert("회원가입 중 오류가 발생했습니다: " + error.response.data.message);
-            } else if (error.response && error.response.status === 500) {
-                alert("김강민때문이다");
-            }else {
-                alert("서버와의 통신 중 문제가 발생했습니다. 다시 시도해주세요.");
+            if (error.message) {
+                alert(`회원가입 실패: ${error.statusCode}, ${error.message}`);
+            } else {
+                alert("알 수 없는 문제가 발생했습니다. 다시 시도해주세요.");
             }
         }
 
