@@ -52,7 +52,7 @@ const LoginPage = () => {
         if (!handleValidation()) return;
         setIsLoading(true);
         try {
-            const data = await login(email,password);
+            const data = await login({email, password});
             alert("환영합니다");
             window.location.href = "/";
         } catch (error) {

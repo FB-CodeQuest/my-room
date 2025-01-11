@@ -21,7 +21,7 @@ export const signup = async (userData) => {
 }
 
 // 로그인 API 호출 함수
-export const login = async (email,password) => {
+export const login = async ({email, password}) => {
     try{
         const response = await axiosInstance.post("/users/login",{email, password});
         console.log("API 응답 데이터:", response.data);
@@ -53,8 +53,30 @@ export const emailSend = async (email) => {
     }catch (error) {
         console.error("API 요청 실패:", error);
         if(error.response){
-            const statusCode = error.response.status
+            const statusCode = error.response.status;
             const message = error.response.data.message || "이메일 발송중 오류가 발생했습니다."
+            throw {statusCode, message};
+        };
+        throw { statusCode: 0, message: "서버와의 통신 중 문제가 발생했습니다." };
+    }
+}
+
+// 인증 코드 확인
+
+export const emailVerify = async ({email, code}) => {
+    console.log("API로 전달된 email,code:", email, code);
+    try{
+        const response = await axiosInstance.post("/email/verify", {
+            email,
+            code
+        });
+        console.log("서버 응답:", response);
+        if(response.status === 200) return response.data;
+    }catch (error) {
+        console.error("API 요청 실패:", error);
+        if(error.response){
+            const statusCode = error.response.status
+            const message = error.response.data.message || "인증 코드 확인 중 오류가 발생했습니다."
             throw {statusCode, message};
         };
         throw { statusCode: 0, message: "서버와의 통신 중 문제가 발생했습니다." };

@@ -1,5 +1,6 @@
 package com.fbcq.be.service;
 
+import com.fbcq.be.dto.request.EmailVerifyRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,11 +39,11 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public boolean verifyToken(String email, String verificationCode) {
+    public boolean verifyToken(EmailVerifyRequest emailVerifyRequest) {
         // 저장된 인증 코드와 사용자 입력 코드 비교
-        String storedCode = verificationCodeStorage.get(email);
-        if (storedCode != null && storedCode.equals(verificationCode)) {
-            verificationCodeStorage.remove(email); // 인증 완료 후 코드 삭제
+        String storedCode = verificationCodeStorage.get(emailVerifyRequest.email());
+        if (storedCode != null && storedCode.equals(emailVerifyRequest.code())) {
+            verificationCodeStorage.remove(emailVerifyRequest.email()); // 인증 완료 후 코드 삭제
             return true;
         }
         return false;

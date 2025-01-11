@@ -8,7 +8,7 @@ import Form from "../../components/Form";
 
 import {useEffect, useState} from "react";
 import {useSearchParams} from "react-router-dom";
-import {emailSend} from "../../utils/api";
+import {emailSend, emailVerify} from "../../utils/api";
 import {validateEmail, validateVerificationCode} from "../../utils/validation";
 
 const PasswordResetPage = () => {
@@ -21,7 +21,6 @@ const PasswordResetPage = () => {
     const [emailError, setEmailError] = useState('');
     const [verificationCode, setVerificationCode] = useState('');
     const [verificationCodeError, setVerificationCodeError] = useState('');
-    const [code, setCode] = useState('');
 
     const [searchParams, setSearchParams] = useSearchParams();
     const initialStep = parseInt(searchParams.get("step")) || 1;
@@ -64,7 +63,7 @@ const PasswordResetPage = () => {
             setEmailError(validateEmail(value));
             setIsButtonDisabled(true);
         } else {
-            setEmailError(validateEmail(value));
+            setEmailError("");
             setIsButtonDisabled(false);
         }
     };
@@ -74,23 +73,26 @@ const PasswordResetPage = () => {
         const value = e.target.value;
         setVerificationCode(value);
 
-        if((!validateVerificationCode)) {
-            setVerificationCodeError(validateVerificationCode(value));
+        const error = validateVerificationCode(value);
+        if(error) {
+            setVerificationCodeError(error);
             setIsButtonDisabled(true);
         }else{
-            setVerificationCodeError(validateVerificationCode(value));
+            setVerificationCodeError("");
             setIsButtonDisabled(false);
-
         }
     }
 
+    // 이메일 인증 API 요청
     const handleSendEmail = async (e) => {
         e.preventDefault();
         // 유효성 검사 실패 시 중단
-        if (!validateEmail(emailAddress)) {
-            setEmailError("올바른 이메일 형식이 아닙니다.");
+        const emailError = validateEmail(emailAddress);
+        if (emailError) {
+            setEmailError(emailError);
             return;
         }
+
         console.log("버튼이 클릭")
         try {
             const response = await emailSend(emailAddress);
@@ -106,11 +108,37 @@ const PasswordResetPage = () => {
         }
     };
 
+    // 인증 코드 인증 API 요청
+    const handleSendCode = async (e) => {
+        e.preventDefault();
+        // 유효성 검사 실패 시 중단
+        const verificationCodeError = validateVerificationCode(verificationCode);
+        if (verificationCodeError) {
+            setVerificationCodeError(verificationCodeError);
+            return;
+        }
+        console.log("버튼이 클릭")
+        console.log(emailAddress);
+        try{
+            const response = await emailVerify({
+                email: emailAddress,
+                code: verificationCode,
+            });
+            console.log("인증 성공:", response);
+            alert("인증이 완료되었습니다.");
+        }catch (error) {
+            console.error("Error:", error);
+            setVerificationCodeError("인증 코드가 유효하지 않습니다.");
+            console.log(error.statusCode);
+            alert(error.message || "인증 중 문제가 발생했습니다.");
+        }
+    }
+
     return(
         <div className={"password-reset-container"}>
             {/* 1단계 : 이메일 인증 */}
             {step === 1 &&(
-                <Form className={"password-reset-form password-reset-email"}>
+                <Form className={"password-reset-form password-reset-email"} onSubmit={handleSendEmail}>
                     <p className={"message"}>가입한 이메일 주소를 입력해주세요</p>
                     <InputWithButton
                         className={emailError? "input-with-button error" : "input-with-button"}
@@ -125,14 +153,14 @@ const PasswordResetPage = () => {
                         timer={null}
                     />
                     {emailError && <p className={"error-message"}>{emailError}</p>}
-                    <Button className={"email-btn"} onClick={handleSendEmail} disabled>이메일로 인증코드 받기</Button>
+                    <Button type={"submit"} className={"email-btn"}> 이메일로 인증코드 받기</Button>
                 </Form>
             )}
 
             {/* 2단계 : 이메일 인증 코드 입력 */}
             {step === 2 &&(
                 <Form className={"password-reset-form password-reset-code"}>
-                    <p className={"message"}>가입한 이메일 주소를 입력해주세요</p>
+                    <p className={"message"}>이메일로 받은 인증코드를 입력해주세요.</p>
                     <InputWithButton
                         className={verificationCodeError ? "input-with-button error" : "input-with-button"}
                         type={"text"}
@@ -144,14 +172,15 @@ const PasswordResetPage = () => {
                         children={"확인"}
                         btnDisabled={isButtonDisabled}
                         btnClassName={`input-btn ${isButtonDisabled ? "disable-btn" : ""}`}
-                        timer={formatTime(time)}
+                        timer={isTimerActive ? formatTime(time) : null}
+                        onclick={handleSendCode}
                     />
                     {verificationCodeError && <p className={"error-message"}>{verificationCodeError}</p>}
                     <div className={"message-wrap"}>
                         <p className={"message"}>이메일 받지 못하셨나요?</p>
                         <LinkButton to={"#"} className={"link-btn"}>이메일 재전송하기</LinkButton>
                     </div>
-                    <Button type={"submit"} className={"input-btn"} onClick={nextStep}>비밀번호 재설정하기</Button>
+                    <Button className={"input-btn"} onClick={nextStep}>비밀번호 재설정하기</Button>
                 </Form>
             )}
 
