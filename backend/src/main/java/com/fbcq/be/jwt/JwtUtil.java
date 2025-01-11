@@ -8,8 +8,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
-import java.security.PrivateKey;
-import java.security.PublicKey;
 import java.util.Date;
 
 @Component
@@ -18,12 +16,6 @@ public class JwtUtil {
     @Value("${jwt.secret-key}")
     private String secretKey;
 
-    @Value("${jwt.private-key-path}")
-    private String privateKeyPath;
-
-    @Value("${jwt.public-key-path}")
-    private String publicKeyPath;
-
     @Value("${jwt.access-token-expiration}")
     private long accessTokenExpiration;
 
@@ -31,25 +23,23 @@ public class JwtUtil {
     private long refreshTokenExpiration;
 
     private Key hmacKey;
-    private PrivateKey privateKey;
-    private PublicKey publicKey;
 
     @PostConstruct
-    public void init() throws Exception {
-        // 대칭 키 (HMAC) 초기화
-        hmacKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
-
-        // 비대칭 키 (RSA) 초기화
-        privateKey = KeyLoader.loadPrivateKey(privateKeyPath);
-        publicKey = KeyLoader.loadPublicKey(publicKeyPath);
+    public void init() {
+        // HMAC 키 초기화
+        if (secretKey != null && !secretKey.isEmpty()) {
+            hmacKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey)); // Base64로 디코딩하여 SecretKey 생성
+        } else {
+            throw new IllegalStateException("Secret key cannot be null or empty.");
+        }
     }
 
     public String generateAccessToken(String username) {
         return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + accessTokenExpiration))
-                .signWith(privateKey, SignatureAlgorithm.RS256)
+                .setExpiration(new Date(System.currentTimeMillis() + accessTokenExpiration)) // 만료 시간
+                .signWith(hmacKey, SignatureAlgorithm.HS256) // HMAC 서명
                 .compact();
     }
 
@@ -57,14 +47,14 @@ public class JwtUtil {
         return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + refreshTokenExpiration))
-                .signWith(privateKey, SignatureAlgorithm.RS256)
+                .setExpiration(new Date(System.currentTimeMillis() + refreshTokenExpiration)) // 만료 시간
+                .signWith(hmacKey, SignatureAlgorithm.HS256) // HMAC 서명
                 .compact();
     }
 
     public String extractUsername(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(publicKey)
+                .setSigningKey(hmacKey) // SecretKey로 검증
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
@@ -74,7 +64,7 @@ public class JwtUtil {
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder()
-                    .setSigningKey(publicKey)
+                    .setSigningKey(hmacKey) // SecretKey로 검증
                     .build()
                     .parseClaimsJws(token);
             return true;
