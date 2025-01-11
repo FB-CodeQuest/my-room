@@ -1,6 +1,7 @@
 package com.fbcq.be.controller;
 
 import com.fbcq.be.dto.request.EmailRequest;
+import com.fbcq.be.dto.request.EmailVerifyRequest;
 import com.fbcq.be.dto.response.EmailResponse;
 import com.fbcq.be.service.EmailService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,10 +27,8 @@ public class EmailController {
 
     @PostMapping("/verify")
     @Operation(summary = "인증 코드 확인", description = "발송된 6자리 인증 코드를 확인하여 인증을 완료합니다.")
-    public ResponseEntity<EmailResponse> verifyEmail(
-            @RequestParam @Parameter(description = "인증 이메일 주소") String email,
-            @RequestParam @Parameter(description = "6자리 인증 코드") String code) {
-        boolean isVerified = emailService.verifyToken(email, code);
+    public ResponseEntity<EmailResponse> verifyEmail(EmailVerifyRequest emailVerifyRequest) {
+        boolean isVerified = emailService.verifyToken(emailVerifyRequest);
         if (isVerified) {
             return ResponseEntity.ok(new EmailResponse("이메일 인증에 성공했습니다.", true));
         }
