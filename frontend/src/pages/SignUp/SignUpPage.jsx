@@ -179,7 +179,6 @@ const SignUpPage = () => {
         // 최종 도메인 결정 (직접 입력인지 확인)
         const currentDomain = domain === 'custom' ? customDomain : domain;
 
-
         // 이메일 유효성 검사
         const emailError = validateEmail(email, currentDomain);
         if(emailError){

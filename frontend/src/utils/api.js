@@ -41,3 +41,22 @@ export const login = async (email,password) => {
         };
     }
 }
+
+// 인증 이메일 발송
+
+export const emailSend = async (email) => {
+    console.log("API로 전달된 email:", email);
+    try{
+        const response = await axiosInstance.post("/email/send", {email});
+        console.log("서버 응답:", response);
+        if(response.status === 200) return response.data;
+    }catch (error) {
+        console.error("API 요청 실패:", error);
+        if(error.response){
+            const statusCode = error.response.status
+            const message = error.response.data.message || "이메일 발송중 오류가 발생했습니다."
+            throw {statusCode, message};
+        };
+        throw { statusCode: 0, message: "서버와의 통신 중 문제가 발생했습니다." };
+    }
+}

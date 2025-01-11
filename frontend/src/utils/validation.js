@@ -47,3 +47,4 @@ export const validateBirthDate = (birthDate) => {
     return {message: "", formatted: formattedBirthDate };
 }
 
+
