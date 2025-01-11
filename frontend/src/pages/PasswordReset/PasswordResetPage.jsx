@@ -21,6 +21,7 @@ const PasswordResetPage = () => {
     const [emailError, setEmailError] = useState('');
     const [verificationCode, setVerificationCode] = useState('');
     const [verificationCodeError, setVerificationCodeError] = useState('');
+    const [isCodeConfirmed, setIsCodeConfirmed] = useState(false);
 
     const [searchParams, setSearchParams] = useSearchParams();
     const initialStep = parseInt(searchParams.get("step")) || 1;
@@ -46,6 +47,7 @@ const PasswordResetPage = () => {
             return () => clearTimeout(timer);
         }else if(isTimerActive && time === 0) {
             setIsTimerActive(false);
+            setVerificationCodeError("인증 시간이 만료되었습니다. 다시 요청해주세요.");
         }
     },[time, isTimerActive]);
 
@@ -59,7 +61,7 @@ const PasswordResetPage = () => {
         const value = e.target.value;
         setEmailAddress(value);
 
-        if (!validateEmail(value)) {
+        if (validateEmail(value)) {
             setEmailError(validateEmail(value));
             setIsButtonDisabled(true);
         } else {
@@ -126,6 +128,8 @@ const PasswordResetPage = () => {
             });
             console.log("인증 성공:", response);
             alert("인증이 완료되었습니다.");
+            setIsTimerActive(false);
+            setIsCodeConfirmed(true);
         }catch (error) {
             console.error("Error:", error);
             setVerificationCodeError("인증 코드가 유효하지 않습니다.");
@@ -169,10 +173,10 @@ const PasswordResetPage = () => {
                         placeholder={"인증코드 6자리"}
                         maxLength={6}
                         onChange={handleVerificationCodeChange}
-                        children={"확인"}
-                        btnDisabled={isButtonDisabled}
-                        btnClassName={`input-btn ${isButtonDisabled ? "disable-btn" : ""}`}
-                        timer={isTimerActive ? formatTime(time) : null}
+                        children={isCodeConfirmed ? "확인 완료" : "확인"}
+                        btnDisabled={isCodeConfirmed || isButtonDisabled}
+                        btnClassName={`input-btn ${isCodeConfirmed || isButtonDisabled? "disable-btn" : ""}`}
+                        timer={isTimerActive ? formatTime(time) : "00:00"}
                         onclick={handleSendCode}
                     />
                     {verificationCodeError && <p className={"error-message"}>{verificationCodeError}</p>}
