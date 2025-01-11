@@ -9,7 +9,7 @@ import Form from "../../components/Form";
 import {useEffect, useState} from "react";
 import {useSearchParams} from "react-router-dom";
 import {emailSend, emailVerify} from "../../utils/api";
-import {validateEmail, validateVerificationCode} from "../../utils/validation";
+import {validateEmail, validatePassword, validateVerificationCode} from "../../utils/validation";
 
 const PasswordResetPage = () => {
     const [emailAddress, setEmailAddress] = useState('');
@@ -22,6 +22,10 @@ const PasswordResetPage = () => {
     const [verificationCode, setVerificationCode] = useState('');
     const [verificationCodeError, setVerificationCodeError] = useState('');
     const [isCodeConfirmed, setIsCodeConfirmed] = useState(false);
+    const [password, setPassword] = useState('');
+    const [passwordError, setPasswordError] = useState('');
+    const [passwordCheck, setPasswordCheck] = useState('');
+    const [passwordCheckError, setPasswordCheckError] = useState('');
 
     const [searchParams, setSearchParams] = useSearchParams();
     const initialStep = parseInt(searchParams.get("step")) || 1;
@@ -111,6 +115,35 @@ const PasswordResetPage = () => {
         }
     };
 
+    useEffect(() => {
+        handleResetPasswordValidation();
+    }, [password, passwordCheck]);
+    const handleResetPasswordValidation = () => {
+        let isValid = true;
+
+        // 비밀번호 유효성 검사
+        const passwordError = validatePassword(password);
+        if (passwordError) {
+            setPasswordError(passwordError);
+            isValid = false;
+        } else {
+            setPasswordError("");
+        }
+
+        // 비밀번호 확인 검사
+        if (passwordCheck.trim() === "") {
+            setPasswordCheckError("필수 입력 항목입니다.");
+            isValid = false;
+        }else if (passwordCheck !== password) {
+            setPasswordCheckError("비밀번호가 일치하지 않습니다.");
+            isValid = false;
+        } else {
+            setPasswordCheckError("");
+        }
+
+        return isValid;
+    };
+
     // 인증 코드 인증 API 요청
     const handleSendCode = async (e) => {
         e.preventDefault();
@@ -164,6 +197,7 @@ const PasswordResetPage = () => {
             setIsButtonDisabled(false);
         }
     };
+
 
     return(
         <div className={"password-reset-container"}>
@@ -227,19 +261,32 @@ const PasswordResetPage = () => {
                 <h2>Logo</h2>
                 <Form className={"password-reset-form password-reset-wrap"}>
                     <Input
+                        className={passwordError ? "error" : ""}
                         type={"password"}
                         id={"newPassword"}
                         label={"새 비밀번호"}
                         placeholder={"새 비밀번호"}
-                        onChange={(e) => setNewPassword(e.target.value)}
+                        onChange={(e) => {
+                            setPassword(e.target.value);
+                            handleResetPasswordValidation();
+                        }}
                     />
                     <Input
+                        className={passwordCheckError ? "error" : ""}
                         type={"password"}
                         id={"newPasswordCheck"}
                         label={"새 비밀번호 확인"}
                         placeholder={"새 비밀번호 확인"}
-                        onChange={(e) => setNewPasswordCheck(e.target.value)}
+                        onChange={(e) => {
+                            setPasswordCheck(e.target.value);
+                            handleResetPasswordValidation();
+                        }}
                     />
+                    {(passwordError || passwordCheckError) && (
+                        <p className={"error-message"}>
+                            {passwordError || passwordCheckError}
+                        </p>
+                    )}
                     <Button type={"submit"} className={"input-btn"}>비밀번호 변경하기</Button>
                 </Form>
             </div>
