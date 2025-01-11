@@ -7,8 +7,8 @@ import LinkButton from "../../components/LinkButton";
 import Form from "../../components/Form";
 
 import {useEffect, useState} from "react";
-import {useSearchParams} from "react-router-dom";
-import {emailSend, emailVerify} from "../../utils/api";
+import {useNavigate, useSearchParams} from "react-router-dom";
+import {emailSend, emailVerify, passwordReset} from "../../utils/api";
 import {validateEmail, validatePassword, validateVerificationCode} from "../../utils/validation";
 
 const PasswordResetPage = () => {
@@ -31,6 +31,7 @@ const PasswordResetPage = () => {
     const initialStep = parseInt(searchParams.get("step")) || 1;
     const [step, setStep] = useState(initialStep);
 
+    const navigate = useNavigate()
     const nextStep = () => setStep((prev) => prev + 1);
 
     useEffect(() => {
@@ -122,18 +123,21 @@ const PasswordResetPage = () => {
         let isValid = true;
 
         // 비밀번호 유효성 검사
-        const passwordError = validatePassword(password);
-        if (passwordError) {
-            setPasswordError(passwordError);
-            isValid = false;
-        } else {
+        if(password.trim() === '') {
             setPasswordError("");
+        }else{
+            const passwordError = validatePassword(password);
+            if (passwordError) {
+                setPasswordError(passwordError);
+                isValid = false;
+            } else {
+                setPasswordError("");
+            }
         }
 
         // 비밀번호 확인 검사
         if (passwordCheck.trim() === "") {
-            setPasswordCheckError("필수 입력 항목입니다.");
-            isValid = false;
+            setPasswordCheckError("");
         }else if (passwordCheck !== password) {
             setPasswordCheckError("비밀번호가 일치하지 않습니다.");
             isValid = false;
@@ -198,6 +202,26 @@ const PasswordResetPage = () => {
         }
     };
 
+    const handleResetPassword = async (e) => {
+        e.preventDefault();
+        const isValid = handleResetPasswordValidation();
+        if (!isValid) return;
+
+        try {
+            const response = await passwordReset({
+                email: emailAddress,
+                password: password,
+            });
+            console.log("API 응답:", response);
+            alert("비밀번호 변경 완료!");
+            navigate("/");
+        } catch (error) {
+            console.error("Error:", error);
+            console.log(error.statusCode);
+            alert(error.message || "비밀번호 변경 중 문제가 발생했습니다.");
+        }
+    }
+
 
     return(
         <div className={"password-reset-container"}>
@@ -259,7 +283,7 @@ const PasswordResetPage = () => {
             {step === 3 &&(
                 <div className={"password-reset"}>
                 <h2>Logo</h2>
-                <Form className={"password-reset-form password-reset-wrap"}>
+                <Form className={"password-reset-form password-reset-wrap"} onSubmit={handleResetPassword}>
                     <Input
                         className={passwordError ? "error" : ""}
                         type={"password"}
