@@ -155,6 +155,7 @@ const PasswordResetPage = () => {
             alert("이메일이 재전송되었습니다. 받은 편지함을 확인해주세요.");
             setTime(180);
             setIsTimerActive(true);
+            setIsCodeConfirmed(false);
         } catch (error) {
             console.error("Error:", error);
             console.log(error.statusCode);
@@ -208,9 +209,15 @@ const PasswordResetPage = () => {
                     {verificationCodeError && <p className={"error-message"}>{verificationCodeError}</p>}
                     <div className={"message-wrap"}>
                         <p className={"message"}>이메일 받지 못하셨나요?</p>
-                        <Button to={"#"} className={"text-btn"} onClick={handleResendEmail}>이메일 재전송하기</Button>
+                        <Button className={"text-btn"} onClick={handleResendEmail}>이메일 재전송하기</Button>
                     </div>
-                    <Button className={"input-btn"} onClick={nextStep}>비밀번호 재설정하기</Button>
+                    <Button
+                        className={`${isCodeConfirmed ? "" : "disable-btn"}`}
+                        onClick={nextStep}
+                        disabled={!isCodeConfirmed}
+                    >
+                        비밀번호 재설정하기
+                    </Button>
                 </Form>
             )}
 
