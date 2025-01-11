@@ -47,4 +47,10 @@ export const validateBirthDate = (birthDate) => {
     return {message: "", formatted: formattedBirthDate };
 }
 
+export const validateVerificationCode = (code) => {
+    if (code.length !== 6 || !/^\d{6}$/.test(code)){
+        return "올바른 인증코드가 아닙니다.";
+    }
+    return "";
+}
 

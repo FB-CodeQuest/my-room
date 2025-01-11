@@ -9,7 +9,7 @@ import Form from "../../components/Form";
 import {useEffect, useState} from "react";
 import {useSearchParams} from "react-router-dom";
 import {emailSend} from "../../utils/api";
-import {validateEmail} from "../../utils/validation";
+import {validateEmail, validateVerificationCode} from "../../utils/validation";
 
 const PasswordResetPage = () => {
     const [emailAddress, setEmailAddress] = useState('');
@@ -19,6 +19,9 @@ const PasswordResetPage = () => {
     const [newPasswordCheck, setNewPasswordCheck] = useState(false);
     const [isButtonDisabled, setIsButtonDisabled] = useState(true);
     const [emailError, setEmailError] = useState('');
+    const [verificationCode, setVerificationCode] = useState('');
+    const [verificationCodeError, setVerificationCodeError] = useState('');
+    const [code, setCode] = useState('');
 
     const [searchParams, setSearchParams] = useSearchParams();
     const initialStep = parseInt(searchParams.get("step")) || 1;
@@ -64,6 +67,20 @@ const PasswordResetPage = () => {
             setIsButtonDisabled(false);
         }
     };
+
+    const handleVerificationCodeChange = (e) => {
+        const value = e.target.value;
+        setVerificationCode(value);
+
+        if((!validateVerificationCode)) {
+            setVerificationCodeError(validateVerificationCode(value));
+            setIsButtonDisabled(true);
+        }else{
+            setVerificationCodeError(validateVerificationCode(value));
+            setIsButtonDisabled(false);
+
+        }
+    }
 
     const handleSendEmail = async (e) => {
         e.preventDefault();
@@ -112,15 +129,18 @@ const PasswordResetPage = () => {
                 <Form className={"password-reset-form password-reset-code"}>
                     <p className={"message"}>가입한 이메일 주소를 입력해주세요</p>
                     <InputWithButton
-                        className={"input-with-button"}
+                        className={verificationCodeError ? "input-with-button error" : "input-with-button"}
                         type={"text"}
                         id={"passwordResetCode"}
                         label={"인증코드 6자리"}
                         placeholder={"인증코드 6자리"}
                         maxLength={6}
-                        onChange={(e) => setEmailAddress(e.target.value)}
+                        onChange={handleVerificationCodeChange}
                         children={"확인"}
+                        btnDisabled={isButtonDisabled}
+                        btnClassName={`input-btn ${isButtonDisabled ? "disable-btn" : ""}`}
                     />
+                    {verificationCodeError && <p className={"error-message"}>{verificationCodeError}</p>}
                     <div className={"message-wrap"}>
                         <p className={"message"}>이메일 받지 못하셨나요?</p>
                         <LinkButton to={"#"} className={"link-btn"}>이메일 재전송하기</LinkButton>
