@@ -13,7 +13,7 @@ import {validateEmail, validateVerificationCode} from "../../utils/validation";
 
 const PasswordResetPage = () => {
     const [emailAddress, setEmailAddress] = useState('');
-    const [time, setTime] = useState(null);
+    const [time, setTime] = useState(180);
     const [isTimerActive, setIsTimerActive] = useState(false);
     const [newPassword, setNewPassword] = useState(false);
     const [newPasswordCheck, setNewPasswordCheck] = useState(false);
@@ -38,6 +38,7 @@ const PasswordResetPage = () => {
         setIsTimerActive(true);
     };
 
+    // 타이머
     useEffect(()=>{
         if(isTimerActive && time > 0){
             const timer = setTimeout(() => {
@@ -68,6 +69,7 @@ const PasswordResetPage = () => {
         }
     };
 
+    // 인증 코드 유효성 검사 및 버튼 활성화 상태 업데이트
     const handleVerificationCodeChange = (e) => {
         const value = e.target.value;
         setVerificationCode(value);
@@ -94,6 +96,8 @@ const PasswordResetPage = () => {
             const response = await emailSend(emailAddress);
             console.log("API 응답:", response);
             alert("인증 이메일이 발송되었습니다. 이메일을 확인해주세요.");
+            setTime(180);
+            setIsTimerActive(true);
             nextStep();
         } catch (error) {
             console.error("Error:", error);
@@ -118,6 +122,7 @@ const PasswordResetPage = () => {
                         children={"확인"}
                         btnDisabled={isButtonDisabled}
                         btnClassName={`input-btn ${isButtonDisabled ? "disable-btn" : ""}`}
+                        timer={null}
                     />
                     {emailError && <p className={"error-message"}>{emailError}</p>}
                     <Button className={"email-btn"} onClick={handleSendEmail} disabled>이메일로 인증코드 받기</Button>
@@ -139,6 +144,7 @@ const PasswordResetPage = () => {
                         children={"확인"}
                         btnDisabled={isButtonDisabled}
                         btnClassName={`input-btn ${isButtonDisabled ? "disable-btn" : ""}`}
+                        timer={formatTime(time)}
                     />
                     {verificationCodeError && <p className={"error-message"}>{verificationCodeError}</p>}
                     <div className={"message-wrap"}>

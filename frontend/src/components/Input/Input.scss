@@ -59,7 +59,6 @@
   border-radius: 4px;
   background-color: #fff;
 
-
   .input-field{
     input{
       height: initial;
@@ -71,6 +70,14 @@
         box-shadow: none;
       }
     }
+  }
+
+  .timer{
+    display: inline-block;
+    flex-shrink: 0;
+    margin-right: .5rem;
+    font-size: $font-size-small;
+    color: #333;
   }
 
   .input-btn{
