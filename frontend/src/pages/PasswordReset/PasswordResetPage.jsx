@@ -47,6 +47,7 @@ const PasswordResetPage = () => {
             return () => clearTimeout(timer);
         }else if(isTimerActive && time === 0) {
             setIsTimerActive(false);
+            setIsButtonDisabled(false);
             setVerificationCodeError("인증 시간이 만료되었습니다. 다시 요청해주세요.");
         }
     },[time, isTimerActive]);
@@ -138,6 +139,31 @@ const PasswordResetPage = () => {
         }
     }
 
+    const handleResendEmail = async (e) => {
+        e.preventDefault();
+        // 유효성 검사 실패 시 중단
+        const emailError = validateEmail(emailAddress);
+        if (emailError) {
+            setEmailError(emailError);
+            return;
+        }
+
+        console.log("재전송 클릭")
+        try {
+            const response = await emailSend(emailAddress);
+            console.log("API 응답:", response);
+            alert("이메일이 재전송되었습니다. 받은 편지함을 확인해주세요.");
+            setTime(180);
+            setIsTimerActive(true);
+        } catch (error) {
+            console.error("Error:", error);
+            console.log(error.statusCode);
+            alert(error.message || "이메일 재전송 중 문제가 발생했습니다.");
+        }finally {
+            setIsButtonDisabled(false);
+        }
+    };
+
     return(
         <div className={"password-reset-container"}>
             {/* 1단계 : 이메일 인증 */}
@@ -174,15 +200,15 @@ const PasswordResetPage = () => {
                         maxLength={6}
                         onChange={handleVerificationCodeChange}
                         children={isCodeConfirmed ? "확인 완료" : "확인"}
-                        btnDisabled={isCodeConfirmed || isButtonDisabled}
-                        btnClassName={`input-btn ${isCodeConfirmed || isButtonDisabled? "disable-btn" : ""}`}
+                        btnDisabled={isCodeConfirmed || isButtonDisabled || !isTimerActive}
+                        btnClassName={`input-btn ${isCodeConfirmed || isButtonDisabled || !isTimerActive ? "disable-btn" : ""}`}
                         timer={isTimerActive ? formatTime(time) : "00:00"}
                         onclick={handleSendCode}
                     />
                     {verificationCodeError && <p className={"error-message"}>{verificationCodeError}</p>}
                     <div className={"message-wrap"}>
                         <p className={"message"}>이메일 받지 못하셨나요?</p>
-                        <LinkButton to={"#"} className={"link-btn"}>이메일 재전송하기</LinkButton>
+                        <Button to={"#"} className={"text-btn"} onClick={handleResendEmail}>이메일 재전송하기</Button>
                     </div>
                     <Button className={"input-btn"} onClick={nextStep}>비밀번호 재설정하기</Button>
                 </Form>

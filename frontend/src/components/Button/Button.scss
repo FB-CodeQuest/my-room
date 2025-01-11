@@ -13,4 +13,13 @@ button{
         background-color: #ccc;
         cursor: initial;
     }
+    &.text-btn{
+        width: initial;
+        padding: 0;
+        background-color: transparent;
+        color: #333;
+        font-size: $font-size-caption;
+        text-decoration: underline;
+        cursor: pointer;
+    }
 }
