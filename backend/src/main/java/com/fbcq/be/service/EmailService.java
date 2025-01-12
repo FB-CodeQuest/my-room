@@ -1,6 +1,8 @@
 package com.fbcq.be.service;
 
+import com.fbcq.be.dto.request.EmailVerifyRequest;
+
 public interface EmailService {
     void sendVerificationEmail(String email);
-    boolean verifyToken(String email, String verificationCode);
+    boolean verifyToken(EmailVerifyRequest emailVerifyRequest);
 }

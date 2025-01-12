@@ -19,6 +19,7 @@ public class BackendApplication {
         dotenv.entries().forEach(entry -> System.setProperty(entry.getKey(), entry.getValue()));
 
         // 환경 변수 테스트 출력 (필요시 삭제 가능)
+//        System.out.println("JWT_SECRET_KEY: " + dotenv.get("JWT_SECRET_KEY"));
 //        System.out.println("DB URL: " + dotenv.get("MYSQL_DB_URL"));
 //        System.out.println("DB USER: " + dotenv.get("MYSQL_DB_USER"));
 //        System.out.println("DB PASSWORD: " + dotenv.get("MYSQL_DB_PASSWORD"));
