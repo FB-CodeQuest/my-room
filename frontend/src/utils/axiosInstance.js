@@ -5,6 +5,7 @@ const axiosInstance = axios.create({
     headers: {
         "Content-Type": "application/json", // 요청 헤더
     },
+    withCredentials : true // 쿠키포함하여 요청
 });
 
 export default axiosInstance;

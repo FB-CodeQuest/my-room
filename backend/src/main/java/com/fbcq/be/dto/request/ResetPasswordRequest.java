@@ -1,7 +1,7 @@
 package com.fbcq.be.dto.request;
 
-public record EmailVerifyRequest(
+public record ResetPasswordRequest(
         String email,
-        String code
+        String password
 ) {
 }

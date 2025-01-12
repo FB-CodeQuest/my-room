@@ -32,6 +32,7 @@ public class EmailController {
         if (isVerified) {
             return ResponseEntity.ok(new EmailResponse("이메일 인증에 성공했습니다.", true));
         }
+        System.out.println("emailVerifyRequest" + emailVerifyRequest);
         return ResponseEntity.badRequest().body(new EmailResponse("인증 코드가 잘못되었거나 만료되었습니다.", false));
     }
 }

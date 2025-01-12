@@ -3,17 +3,12 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.fbcq.be.mapper.UserMapper">
-    <!-- 로그인 처리 -->
-    <select id="select" parameterType="com.fbcq.be.dto.request.LoginRequest" resultType="com.fbcq.be.dto.response.LoginResponse">
-        SELECT user_id AS userId, name
-        FROM Users
-        WHERE email = #{email} AND password = #{password};
-    </select>
 
     <!-- 회원가입 처리 -->
-    <insert id="create" parameterType="com.fbcq.be.dto.request.SignUpRequest">
-        INSERT INTO Users (email, password, name, phone, birth_date, gender)
-        VALUES (#{email}, #{password}, #{name}, #{phone}, #{birthDate}, #{gender});
+
+    <insert id="insertUser" parameterType="com.fbcq.be.domain.User">
+        INSERT INTO Users (email, password, name, phone, birth_date, gender, created_at, updated_at)
+        VALUES (#{email}, #{password}, #{name}, #{phone}, #{birthDate}, #{gender.dbValue}, #{createdAt}, #{updatedAt})
     </insert>
 
     <!-- 비밀번호 재설정 -->
@@ -22,4 +17,20 @@
         set password = #{password}
         WHERE email = #{email}
     </update>
+
+    <!-- LoginResponse 반환 -->
+    <select id="selectLoginResponseByEmail" parameterType="String" resultType="com.fbcq.be.dto.response.LoginResponse">
+        SELECT user_id AS userId, name, password
+        FROM Users
+        WHERE email = #{email};
+    </select>
+
+    <!-- User 반환 -->
+    <select id="selectUserByEmail" parameterType="String" resultType="com.fbcq.be.domain.User">
+        SELECT user_id AS userId, email, password, name, phone, birth_date AS birthDate,
+               CASE gender WHEN 'M' THEN 'MALE' WHEN 'F' THEN 'FEMALE' END AS gender,
+               created_at AS createdAt, updated_at AS updatedAt
+        FROM Users
+        WHERE email = #{email};
+    </select>
 </mapper>

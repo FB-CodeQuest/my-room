@@ -11,4 +11,6 @@ public interface UserService {
     int signUp(SignUpRequest signUpRequest);
 
     boolean updatePasswordByEmail(String email, String password);
+
+    boolean checkEmailExists(String email);
 }

@@ -62,7 +62,6 @@ export const emailSend = async (email) => {
 }
 
 // 인증 코드 확인 API 호출 함수
-
 export const emailVerify = async ({email, code}) => {
     console.log("API로 전달된 email,code:", email, code);
     try{
@@ -84,7 +83,6 @@ export const emailVerify = async ({email, code}) => {
 }
 
 // 비밀번호 재설정 API 호출 함수
-
 export const passwordReset = async ({email, password}) => {
     console.log("API로 전달된 email, password:", email, password);
     try{
