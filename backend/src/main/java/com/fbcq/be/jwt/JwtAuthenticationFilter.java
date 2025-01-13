@@ -21,13 +21,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
 
+//    @Override
+//    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+//        String path = request.getServletPath();
+//        // login과 register 경로는 필터링 제외
+//        log.info("path: {}", path);
+//        return path.equals("/api/users/login") || path.equals("/api/users/register");
+//    }
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String path = request.getServletPath();
-        // login과 register 경로는 필터링 제외
-        log.info("path: {}", path);
-        return path.equals("/api/users/login") || path.equals("/api/users/register");
+        return path.matches("^/api/(email/(send|verify)|users/(login|signup|check-email))$");
     }
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)

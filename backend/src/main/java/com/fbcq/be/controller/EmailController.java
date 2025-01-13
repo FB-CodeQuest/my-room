@@ -27,7 +27,7 @@ public class EmailController {
 
     @PostMapping("/verify")
     @Operation(summary = "인증 코드 확인", description = "발송된 6자리 인증 코드를 확인하여 인증을 완료합니다.")
-    public ResponseEntity<EmailResponse> verifyEmail(EmailVerifyRequest emailVerifyRequest) {
+    public ResponseEntity<EmailResponse> verifyEmail(@RequestBody EmailVerifyRequest emailVerifyRequest) {
         boolean isVerified = emailService.verifyToken(emailVerifyRequest);
         if (isVerified) {
             return ResponseEntity.ok(new EmailResponse("이메일 인증에 성공했습니다.", true));
