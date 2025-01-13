@@ -12,6 +12,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faXmark} from "@fortawesome/free-solid-svg-icons/faXmark";
 import {validateBirthDate, validateEmail, validatePassword, validatePhoneNumber} from "../../utils/validation";
 import {signup} from "../../utils/api";
+import Step2CodeVerification from "../PasswordReset/Step2CodeVerification";
 
 const SignUpPage = () => {
     // Input 상태
@@ -24,6 +25,8 @@ const SignUpPage = () => {
     const [phoneNumber, setPhoneNumber] = useState('');
     const [birthDate, setBirthDate] = useState('');
     const [gender, setGender] = useState('');
+    const contentRef = useRef(null);
+    const [isVisible, setIsVisible] = useState(false);
 
     // 체크박스 및 라디오 버튼 상태
     const [allChecked, setAllChecked] = useState(false);
@@ -63,6 +66,15 @@ const SignUpPage = () => {
         {value: "M", label: "남자"},
         {value: "F", label: "여자"},
     ]
+
+    // useEffect (() => {
+    //     const content = contentRef.current;
+    //     if(content) {
+    //         content.style.maxHeight = isVisible
+    //         ? `${content.scrollHeight}px`
+    //         : "0";
+    //     }
+    // },[isVisible])
 
 
     /* 이벤트 핸들러 */
@@ -318,6 +330,14 @@ const SignUpPage = () => {
                             </div>
                             {emailError && <p className="error-message">{emailError}</p>}
                             <Button type={"submit"} className={"submit-btn"}>이메일 인증</Button>
+                            <div
+                                className={"code-wrap"}
+                                ref={contentRef}
+                            >
+                                <Step2CodeVerification
+
+                                />
+                            </div>
                         </div>
                         <div className={"input-wrap"}>
                             <Input
