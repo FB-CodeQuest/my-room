@@ -1,4 +1,5 @@
 import axiosInstance from "./axiosInstance";
+import axios from "axios";
 
 // 회원가입 API 호출 함수
 export const signup = async (userData) => {
@@ -100,5 +101,28 @@ export const passwordReset = async ({email, password}) => {
             throw {statusCode, message};
         };
         throw { statusCode: 0, message: "서버와의 통신 중 문제가 발생했습니다." };
+    }
+}
+
+// 이메일 존재 확인
+export const checkEmail = async (email) => {
+    try{
+        const response = await axios.get('http://localhost:8080/api/users/check-email', {
+            params: {email}
+        });
+
+        console.log("서버 응답:", response.data);
+        return response.data;
+
+    }catch (error) {
+        console.log("API요청 실패 :", error);
+
+        if(error.response){
+            const statusCode = error.response.status
+            const message = error.response.data.message || "이메일 존재 확인 중에 오류가 발생했습니다"
+            throw {statusCode, message};
+         }
+        throw { statusCode: 0, message: "서버와의 통신 중 문제가 발생했습니다." };
+
     }
 }

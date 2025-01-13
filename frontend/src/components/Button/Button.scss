@@ -10,7 +10,7 @@ button{
     cursor: pointer;
 
     &.disable-btn{
-        background-color: #ccc;
+        background-color: $color-disabled-btn;
         cursor: initial;
     }
     &.text-btn{

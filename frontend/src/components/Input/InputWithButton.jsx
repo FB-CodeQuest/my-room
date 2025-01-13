@@ -18,7 +18,8 @@ const InputWithButton = ({
                              btnClassName,
                              btnDisabled,
                              timer,
-                             onclick
+                             onClick,
+                             disabled
 }) => {
     return(
         <div className={`input-button-wrap ${className}`}>
@@ -32,13 +33,14 @@ const InputWithButton = ({
                 onChange={onChange}
                 placeholder={placeholder}
                 maxLength={maxLength}
+                disabled={disabled}
             />
             {timer && <span className="timer">{timer}</span>}
             <Button
                 btnType={btnType}
                 className={`input-btn ${btnClassName}`}
                 btnDisabled={btnDisabled}
-                onClick={onclick}
+                onClick={onClick}
             >
                 {children}
             </Button>

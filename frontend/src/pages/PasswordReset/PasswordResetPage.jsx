@@ -8,7 +8,7 @@ import Form from "../../components/Form";
 
 import {useEffect, useState} from "react";
 import {useNavigate, useSearchParams} from "react-router-dom";
-import {emailSend, emailVerify, passwordReset} from "../../utils/api";
+import {checkEmail, emailSend, emailVerify, passwordReset} from "../../utils/api";
 import {validateEmail, validatePassword, validateVerificationCode} from "../../utils/validation";
 
 const PasswordResetPage = () => {
@@ -26,7 +26,7 @@ const PasswordResetPage = () => {
     const [passwordError, setPasswordError] = useState('');
     const [passwordCheck, setPasswordCheck] = useState('');
     const [passwordCheckError, setPasswordCheckError] = useState('');
-
+    const [isEmailInvalid, setIsEmailInvalid] = useState(false);
     const [searchParams, setSearchParams] = useSearchParams();
     const initialStep = parseInt(searchParams.get("step")) || 1;
     const [step, setStep] = useState(initialStep);
@@ -65,14 +65,17 @@ const PasswordResetPage = () => {
     // 이메일 유효성 검사 및 버튼 활성화 상태 업데이트
     const handleValidation = (e) => {
         const value = e.target.value;
+        console.log("이메일 입력값:", value);
         setEmailAddress(value);
 
         if (validateEmail(value)) {
             setEmailError(validateEmail(value));
             setIsButtonDisabled(true);
+            setIsEmailInvalid(true);
         } else {
             setEmailError("");
             setIsButtonDisabled(false);
+            setIsEmailInvalid(false);
         }
     };
 
@@ -108,6 +111,9 @@ const PasswordResetPage = () => {
             alert("인증 이메일이 발송되었습니다. 이메일을 확인해주세요.");
             setTime(180);
             setIsTimerActive(true);
+            setIsCodeConfirmed(false);
+            setEmailError("")
+            setIsEmailInvalid(false);
             nextStep();
         } catch (error) {
             console.error("Error:", error);
@@ -176,6 +182,7 @@ const PasswordResetPage = () => {
         }
     }
 
+    // 이메일 재전송 API요청
     const handleResendEmail = async (e) => {
         e.preventDefault();
         // 유효성 검사 실패 시 중단
@@ -202,6 +209,7 @@ const PasswordResetPage = () => {
         }
     };
 
+    // 비밀번호 재설정 API요청
     const handleResetPassword = async (e) => {
         e.preventDefault();
         const isValid = handleResetPasswordValidation();
@@ -222,6 +230,34 @@ const PasswordResetPage = () => {
         }
     }
 
+    // 이메일 존재 확인 API요청
+    const handleCheckEmail = async (e) => {
+        e.preventDefault();
+
+        if (isButtonDisabled) return;
+        console.log("handleCheckEmail 호출됨");
+        try{
+            const response = await checkEmail(emailAddress);
+            console.log("이메일 존재 확인 결과:", response);
+            console.log("response.available", response.available)
+
+
+            if (response.available) {
+                // 유효하지않은 이메일일 경우
+                setEmailError("등록된 이메일이 아닙니다.");
+                setIsEmailInvalid(true);
+            } else {
+                // 유효한 이메일일 경우
+                setIsCodeConfirmed(true);
+                setIsEmailInvalid(false);
+            }
+
+        }catch (error){
+            console.error("에러 발생:", error);
+            alert(error.message || "문제가 발생했습니다.");
+        }
+
+    }
 
     return(
         <div className={"password-reset-container"}>
@@ -230,19 +266,27 @@ const PasswordResetPage = () => {
                 <Form className={"password-reset-form password-reset-email"} onSubmit={handleSendEmail}>
                     <p className={"message"}>가입한 이메일 주소를 입력해주세요</p>
                     <InputWithButton
-                        className={emailError? "input-with-button error" : "input-with-button"}
+                        className={`${emailError ? "error" : ""} ${isCodeConfirmed ? "disabled" : ""}`}
                         type={"email"}
                         id={"emailAddress"}
                         label={"이메일주소"}
                         placeholder={"이메일"}
                         onChange={handleValidation}
-                        children={"확인"}
-                        btnDisabled={isButtonDisabled}
-                        btnClassName={`input-btn ${isButtonDisabled ? "disable-btn" : ""}`}
+                        disabled={isCodeConfirmed}
+                        children={isCodeConfirmed ? "확인 완료" : "확인"}
+                        btnDisabled={isEmailInvalid || isCodeConfirmed}
+                        btnClassName={`input-btn ${isCodeConfirmed ||isEmailInvalid || isButtonDisabled ? "disable-btn" : ""}`}
                         timer={null}
+                        onClick={handleCheckEmail}
                     />
                     {emailError && <p className={"error-message"}>{emailError}</p>}
-                    <Button type={"submit"} className={"email-btn"}> 이메일로 인증코드 받기</Button>
+                    <Button
+                        type={"submit"}
+                        className={`${isCodeConfirmed ? "email-btn" : "email-btn disable-btn"}`}
+                        disabled={!isCodeConfirmed}
+                    >
+                        이메일로 인증코드 받기
+                    </Button>
                 </Form>
             )}
 
@@ -262,7 +306,7 @@ const PasswordResetPage = () => {
                         btnDisabled={isCodeConfirmed || isButtonDisabled || !isTimerActive}
                         btnClassName={`input-btn ${isCodeConfirmed || isButtonDisabled || !isTimerActive ? "disable-btn" : ""}`}
                         timer={isTimerActive ? formatTime(time) : "00:00"}
-                        onclick={handleSendCode}
+                        onClick={handleSendCode}
                     />
                     {verificationCodeError && <p className={"error-message"}>{verificationCodeError}</p>}
                     <div className={"message-wrap"}>
