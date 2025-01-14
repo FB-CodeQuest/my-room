@@ -25,7 +25,7 @@ const Step1EmailVerification = ({
                 disabled={isCodeConfirmed}
                 children={isCodeConfirmed ? "확인 완료" : "확인"}
                 btnDisabled={isEmailInvalid || isCodeConfirmed}
-                btnClassName={`input-btn ${isCodeConfirmed ||isEmailInvalid || isButtonDisabled ? "disable-btn" : ""}`}
+                btnClassName={`input-btn ${isCodeConfirmed ||isEmailInvalid || isButtonDisabled ? "disabled-btn" : ""}`}
                 timer={null}
                 onClick={handleCheckEmail}
             />

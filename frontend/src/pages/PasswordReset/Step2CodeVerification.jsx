@@ -14,6 +14,7 @@ const Step2CodeVerification = ({
    handleResendEmail,
    formatTime,
    nextStep,
+   btnDisabled
 }) => {
     return (
         <Form className={"password-reset-form password-reset-code"}>
@@ -27,8 +28,8 @@ const Step2CodeVerification = ({
                 maxLength={6}
                 onChange={handleVerificationCodeChange}
                 children={isCodeConfirmed ? "확인 완료" : "확인"}
-                btnDisabled={isCodeConfirmed || isButtonDisabled || !isTimerActive}
-                btnClassName={`input-btn ${isCodeConfirmed || isButtonDisabled || !isTimerActive ? "disable-btn" : ""}`}
+                btnDisabled={btnDisabled || isCodeConfirmed || isButtonDisabled || !isTimerActive}
+                btnClassName={`input-btn ${ btnDisabled || isCodeConfirmed || isButtonDisabled || !isTimerActive ? "disabled-btn" : ""}`}
                 timer={isTimerActive ? formatTime(time) : "00:00"}
                 onClick={handleSendCode}
             />
@@ -38,7 +39,7 @@ const Step2CodeVerification = ({
                 <Button className={"text-btn"} onClick={handleResendEmail}>이메일 재전송하기</Button>
             </div>
             <Button
-                className={`${isCodeConfirmed ? "" : "disable-btn"}`}
+                className={`submit-btn ${isCodeConfirmed ? "" : "disabled-btn"}`}
                 onClick={nextStep}
                 disabled={!isCodeConfirmed}
             >

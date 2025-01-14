@@ -9,7 +9,7 @@ button{
     background-color: #333;
     cursor: pointer;
 
-    &.disable-btn{
+    &.disabled-btn{
         background-color: $color-disabled-btn;
         cursor: initial;
     }
