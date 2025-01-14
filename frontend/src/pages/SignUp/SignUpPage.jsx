@@ -6,8 +6,8 @@ import DropDown from "../../components/DropDown/DropDown";
 import Button from "../../components/Button/Button";
 import RadioButton from "../../components/RadioButton/RadioButton";
 import CheckBox from "../../components/CheckBox/CheckBox";
-import {useEffect, useRef, useState} from "react";
 import InputWithButton from "../../components/Input/InputWithButton";
+import {useEffect, useRef, useState} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faXmark} from "@fortawesome/free-solid-svg-icons/faXmark";
 import {
@@ -21,7 +21,7 @@ import {checkEmail, emailSend, emailVerify, signup} from "../../utils/api";
 import Step2CodeVerification from "../PasswordReset/Step2CodeVerification";
 
 const SignUpPage = () => {
-    // Input 상태
+    // 입력필드 상태
     const [email, setEmail] = useState('');
     const [domain, setDomain] = useState('');
     const [customDomain, setCustomDomain] = useState('');
@@ -32,22 +32,22 @@ const SignUpPage = () => {
     const [birthDate, setBirthDate] = useState('');
     const [gender, setGender] = useState('');
 
+   // 인증 타이머 상태
     const [verificationCode, setVerificationCode] = useState('');
     const [verificationCodeError, setVerificationCodeError] = useState('');
     const [isTimerActive, setIsTimerActive] = useState(false);
     const [time, setTime] = useState(180); // 3분 타이머
 
-    // const [emailAddress, setEmailAddress] = useState('');
+    // 버튼 활성화 밀 에러 상태
     const [isVerificationButtonEnabled, setIsVerificationButtonEnabled] = useState(false);
     const [isEmailInvalid, setIsEmailInvalid] = useState(false);
     const [isButtonDisabled, setIsButtonDisabled] = useState(true);
     const [isCodeConfirmed, setIsCodeConfirmed] = useState(false);
 
+    // UI 및 체크박스 상태
     const contentRef = useRef(null);
     const [isVisible, setIsVisible] = useState(false);
     const [isEmailValid, setIsEmailValid] = useState(false);
-
-    // 체크박스 및 라디오 버튼 상태
     const [allChecked, setAllChecked] = useState(false);
     const [checkedItems, setCheckedItems] = useState({
         terms: false,
@@ -71,7 +71,7 @@ const SignUpPage = () => {
     // ref
     const inputRef = useRef(null);
 
-    // DropDown option
+    // 이메일 도메인 옵션
     const addressOptions =[
         {value: "naver.com", label: "naver.com"},
         {value: "gmail.com", label: "gmail.com"},
@@ -80,18 +80,20 @@ const SignUpPage = () => {
         {value: 'custom', label: '직접입력'}
     ]
 
-    // radio option
+    // 성별 옵션
     const genderOptions =[
         {value: "M", label: "남자"},
         {value: "F", label: "여자"},
     ]
 
+    // 시간 포멧팅
     const formatTime = (seconds) => {
         const minutes = Math.floor(seconds / 60);
         const remainingSeconds = seconds % 60;
         return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
     };
 
+    // 타이머
     useEffect(() => {
         if (isTimerActive && time > 0) {
             const timer = setTimeout(() => {
@@ -104,6 +106,7 @@ const SignUpPage = () => {
         }
     }, [time, isTimerActive]);
 
+    // 인증 코드 UI
     useEffect (() => {
         const content = contentRef.current;
         if(content) {
@@ -127,16 +130,9 @@ const SignUpPage = () => {
         setIsEmailValid(!error);
 
         setIsButtonDisabled(!!error || !currentDomain);
-
-        // // 이메일과 도메인이 모두 유효한지 확인
-        // if (!error && currentDomain) {
-        //     setIsButtonDisabled(false); // 버튼 활성화
-        // } else {
-        //     setIsButtonDisabled(true); // 버튼 비활성화
-        // }
     };
 
-    // 드롭다운 도메인 선택
+    // 도메인 선택
     const handleDomainChange = (selectedValue) => {
         if (selectedValue === 'custom') {
             setDomain('custom');
@@ -145,33 +141,25 @@ const SignUpPage = () => {
         } else {
             setDomain(selectedValue);
             const error = validateEmail(email, selectedValue);
-            setEmailError(error); // 에러 메시지 업데이트
+            setEmailError(error);
             setIsEmailValid(!error);
-
             setIsButtonDisabled(!!error || !email);
-
-            // // 이메일과 도메인이 모두 유효한지 확인
-            // if (!error && email) {
-            //     setIsButtonDisabled(false); // 버튼 활성화
-            // } else {
-            //     setIsButtonDisabled(true); // 버튼 비활성화
-            // }
         }
     };
-    // 도메인 상태 업데이트 유효성검사(직접입력)
+
+    // 사용자 정의 도메인 입력
     const handleCustomDomainChange = (e) => {
         const value = e.target.value;
-        setCustomDomain(value); // "직접 입력" 값 업데이트
+        setCustomDomain(value);
 
         const error = validateEmail(email, value);
         setEmailError(error); // 에러 메시지 업데이트
         setIsEmailValid(!error);
 
-        // 이메일과 도메인이 모두 유효한지 확인
         if (!error && email) {
-            setIsButtonDisabled(false); // 버튼 활성화
+            setIsButtonDisabled(false);
         } else {
-            setIsButtonDisabled(true); // 버튼 비활성화
+            setIsButtonDisabled(true);
         }
     };
 
@@ -196,16 +184,7 @@ const SignUpPage = () => {
         const error = validateVerificationCode(value);
         setVerificationCodeError(error);
 
-        // 입력값이 유효하면 버튼 활성화
         setIsVerificationButtonEnabled(value.length > 0 && !error);
-        //
-        // if (error) {
-        //     setVerificationCodeError(error);
-        //     setIsButtonDisabled(true);
-        // } else {
-        //     setVerificationCodeError('');
-        //     setIsButtonDisabled(false);
-        // }
     };
 
 
@@ -245,7 +224,7 @@ const SignUpPage = () => {
         setBirthDateError(message);
     };
 
-    // 라디오 버튼
+    // 성별 선택
     const handleRadioOptionChange = (value) => {
         console.log("선택된 옵션:", value);
         setSelectedOption(value);
@@ -263,7 +242,7 @@ const SignUpPage = () => {
             email: newChecked,
         });
     };
-    // 체크박스 상태
+    // 개별 체크박스 상태
     const handleItemChange = (key) => {
         setCheckedItems((prev) => {
             const newCheckedItems = {...prev, [key] : !prev[key]};
@@ -272,11 +251,9 @@ const SignUpPage = () => {
         });
     };
 
+    // 이메일 인증 코드 전송
     const handleSendCode = async (e) => {
         e.preventDefault();
-
-        console.log("전달된 email:", email);
-        console.log("전달된 verificationCode:", verificationCode);
 
         const verificationCodeError = validateVerificationCode(verificationCode);
         if (verificationCodeError) {
@@ -297,15 +274,13 @@ const SignUpPage = () => {
         }
     };
 
+    // 이메일 인증 요청
     const handleEmailVerification = async (e) => {
         e.preventDefault();
 
         const currentDomain = domain === 'custom' ? customDomain : domain;
         const emailAddress = `${email}@${currentDomain}`;
-
         setEmail(emailAddress);
-
-        console.log("handleEmailVerification 호출됨");
 
         const emailError = validateEmail(emailAddress);
         if (emailError) {
@@ -317,7 +292,6 @@ const SignUpPage = () => {
             // 이메일 중복 확인
             const checkResponse = await checkEmail(emailAddress);
             if (checkResponse.available) {
-                // 이메일 사용 가능
                 setIsVisible(true);
                 setIsButtonDisabled(true);
                 alert("사용 가능한 이메일입니다.");
@@ -332,7 +306,6 @@ const SignUpPage = () => {
                 setEmailError("");
                 setIsEmailInvalid(false);
             } else {
-                // 이미 가입된 이메일
                 setEmailError("이미 가입한 이메일입니다.");
                 setIsVisible(false);
             }
@@ -342,61 +315,6 @@ const SignUpPage = () => {
         }
 
     }
-
-    // 이메일 인증
-    // const handleSendEmail = async (e) => {
-    //     e.preventDefault();
-    //     // 유효성 검사 실패 시 중단
-    //     // const emailError = validateEmail(emailAddress);
-    //     // if (emailError) {
-    //     //     setEmailError(emailError);
-    //     //     return;
-    //     // }
-    //
-    //     console.log("버튼이 클릭")
-    //     try {
-    //         const response = await emailSend(emailAddress);
-    //         console.log("API 응답:", response);
-    //         alert("인증 이메일이 발송되었습니다. 이메일을 확인해주세요.");
-    //         setTime(180);
-    //         setIsTimerActive(true);
-    //         setIsCodeConfirmed(false);
-    //         setEmailError("")
-    //         setIsEmailInvalid(false);
-    //     } catch (error) {
-    //         console.error("Error:", error);
-    //         console.log(error.statusCode);
-    //         alert(error.message || "이메일 발송 중 문제가 발생했습니다.");
-    //     }
-    // };
-
-    //이메일 존재 확인 API요청
-    // const handleCheckEmail = async (e) => {
-    //     // e.preventDefault();
-    //     // const currentDomain = domain === 'custom' ? customDomain : domain;
-    //     // const emailAddress = `${email}@${currentDomain}`;
-    //
-    //     console.log("handleCheckEmail 호출됨");
-    //     try{
-    //         // const response = await checkEmail(emailAddress);
-    //         if (response.available) {
-    //             // 존재하지 않은 이메일일 경우
-    //             // setIsButtonDisabled(true);
-    //             // setIsVisible(true);
-    //             // alert("사용 가능한 이메일입니다.");
-    //         } else {
-    //             // 유효한 이메일일 경우
-    //             setEmailError("이미 가입한 이메일입니다.");
-    //             setIsVisible(false);
-    //         }
-    //
-    //     }catch (error){
-    //         console.error("에러 발생:", error);
-    //         alert(error.message || "문제가 발생했습니다.");
-    //     }
-    //
-    // }
-   // 이메일 재전송
 
     // 이메일 재전송
     const handleResendEmail = async (e) => {
@@ -414,15 +332,12 @@ const SignUpPage = () => {
         }
     };
 
-    /* 폼 제출 시 최종 유효성 검사 및 API요청 처리 */
+    // 폼 제출 시 최종 유효성 검사 및 API요청 처리
     const handleSignup = async (e) => {
         e.preventDefault();
 
-        // 최종 도메인 결정 (직접 입력인지 확인)
-        // const currentDomain = domain === 'custom' ? customDomain : domain;
         let isValid = true;
 
-        console.log(email);
         // 이메일 유효성 검사
         const emailError = validateEmail(email);
         if(emailError){
@@ -481,13 +396,7 @@ const SignUpPage = () => {
             isValid = false;
         }
 
-        if (!isValid) {
-            console.log("유효성 검사 실패로 함수 종료")
-            // setIsButtonDisabled(true);
-            setEmailError(""); // 필요 시 초기화
-            setPasswordError(""); // 필요 시 초기화
-            return
-        };
+        if (!isValid) return;
 
         try {
             // API요청
@@ -500,10 +409,9 @@ const SignUpPage = () => {
                 gender : selectedOption
             };
             const response = await signup(userData);
-
             // API응답 데이터 처리
-                alert("회원가입이 성공적으로 완료되었습니다!");
-                window.location.href = "/";
+            alert("회원가입이 성공적으로 완료되었습니다!");
+            window.location.href = "/";
         } catch (error) {
             if (error.message) {
                 alert(`회원가입 실패: ${error.statusCode}, ${error.message}`);
@@ -581,7 +489,6 @@ const SignUpPage = () => {
                                         isTimerActive={isTimerActive}
                                         time={time}
                                         isCodeConfirmed={isCodeConfirmed}
-                                        // isButtonDisabled={isButtonDisabled}
                                         btnDisabled={!isVerificationButtonEnabled}
                                         handleVerificationCodeChange={handleVerificationCodeChange}
                                         handleSendCode={handleSendCode}
