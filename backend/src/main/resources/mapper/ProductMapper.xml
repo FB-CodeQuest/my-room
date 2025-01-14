@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fbcq.be.mapper.ProductMapper">
+
+    <!-- 상품 조회 -->
+    <select id="selectProductById" parameterType="Long" resultType="com.fbcq.be.domain.Product">
+        SELECT
+            product_id AS productId,
+            category_id AS categoryId,
+            name,
+            description,
+            price,
+            stock,
+            created_at AS createdAt,
+            updated_at AS updatedAt
+        FROM Products
+        WHERE product_id = #{productId}
+    </select>
+
+    <!-- 상품 리스트 조회 -->
+    <select id="selectAllProduct" resultType="com.fbcq.be.domain.Product">
+        SELECT
+            product_id AS productId,
+            category_id AS categoryId,
+            name,
+            description,
+            price,
+            stock,
+            created_at AS createdAt,
+            updated_at AS updatedAt
+        FROM Products
+    </select>
+
+    <!-- 상품 추가 -->
+    <insert id="insertProduct" parameterType="com.fbcq.be.domain.Product">
+        INSERT INTO Products (category_id, name, description, price, stock, created_at, updated_at)
+        VALUES (#{categoryId}, #{name}, #{description}, #{price}, #{stock}, NOW(), NOW())
+    </insert>
+
+    <!-- 상품 수정 -->
+    <update id="updateProduct" parameterType="com.fbcq.be.domain.Product">
+        UPDATE Products
+        SET
+            category_id = #{categoryId},
+            name = #{name},
+            description = #{description},
+            price = #{price},
+            stock = #{stock},
+            updated_at = NOW()
+        WHERE product_id = #{productId}
+    </update>
+
+    <!-- 상품 삭제 -->
+    <delete id="deleteProduct" parameterType="Long">
+        DELETE FROM Products
+        WHERE product_id = #{productId}
+    </delete>
+
+</mapper>
