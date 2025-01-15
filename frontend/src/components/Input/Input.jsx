@@ -1,5 +1,6 @@
 import "./Input.scss";
-const Input = ({label, type, id, value, onChange, placeholder, className, maxLength, showLabel=false, ref}) => {
+import Button from "../Button/Button";
+const Input = ({label, type, id, value, onChange, placeholder, className, maxLength, showLabel=false, ref, disabled}) => {
     return(
         <div className={`input-field ${className}`}>
             {showLabel && <label htmlFor={id}>{label}</label>}
@@ -11,9 +12,9 @@ const Input = ({label, type, id, value, onChange, placeholder, className, maxLen
                 onChange={onChange}
                 placeholder={placeholder}
                 maxLength={maxLength}
+                disabled={disabled}
             />
         </div>
     );
 };
-
 export default Input;

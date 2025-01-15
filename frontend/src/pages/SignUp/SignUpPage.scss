@@ -16,6 +16,9 @@
 
   .signup-container {
     .signup-form {
+      label{
+        font-weight: 700;
+      }
       .input-group {
         display: flex;
         flex-direction: column;
@@ -31,6 +34,59 @@
           span{
             padding: 0.6rem .2rem;
           }
+          .input-button-wrap{
+            margin-bottom: initial;
+            .input-field{
+              flex-direction: row;
+            }
+
+          }
+        }
+        .code-wrap{
+          margin-top: 1rem;
+          transition: all 0.3s ease;
+          overflow: hidden;
+
+          .code-group{
+            width: 100%;
+            height: auto;
+            padding: 24px 16px;
+            background: #f0f0f0;
+
+            .password-reset-code{
+            .message{
+              font-size: $font-size-caption;
+              margin-bottom: .5rem;
+            }
+
+            .message-wrap{
+              display: flex;
+              align-items: baseline;
+              gap: 4px;
+              margin-top: .5rem;
+
+              .input-btn{
+                width: initial;
+                display: inline-block;
+                padding: .8rem .5rem;
+                line-height: 5px;
+                font-size: $font-size-small;
+                white-space: nowrap;
+              }
+            }
+              .submit-btn {
+                display: none;
+              }
+          }
+
+          }
+
+          &.hidden{
+            padding: 0;
+          }
+        }
+        .submit-btn{
+          margin-top: 1rem;
         }
       }
 

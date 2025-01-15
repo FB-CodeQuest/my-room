@@ -47,7 +47,8 @@ button {
   border-color: $color-error;
 }
 .error-message {
-  padding-top: .5rem;
+  display: inline-block;
+  paddig-top: .5rem;
   color: $color-error;
   font-size: 12px;
 }
