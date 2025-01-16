@@ -19,8 +19,8 @@
         WHERE product_id = #{productId}
     </select>
 
-    <!-- 상품 리스트 조회 -->
-    <select id="selectAllProduct" resultType="com.fbcq.be.domain.Product">
+    <!-- 상품 리스트 조회 (페이징) -->
+    <select id="selectAllProducts" resultType="com.fbcq.be.domain.Product">
         SELECT
             product_id AS productId,
             category_id AS categoryId,
@@ -31,7 +31,9 @@
             created_at AS createdAt,
             updated_at AS updatedAt
         FROM Products
+                 LIMIT #{limit} OFFSET #{offset}
     </select>
+
 
     <!-- 상품 추가 -->
     <insert id="insertProduct" parameterType="com.fbcq.be.domain.Product">
